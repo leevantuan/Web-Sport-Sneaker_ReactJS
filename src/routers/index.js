@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../components/body.scss'
 import './router.scss'
 import { useSelector } from 'react-redux';
@@ -15,14 +15,17 @@ import { FaRegUser } from "react-icons/fa";
 import { FaRegCommentDots } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa";
 
-// import { FaFacebookF } from "react-icons/fa";
-// import { FaYoutube } from "react-icons/fa";
-// import { FaLinkedin } from "react-icons/fa";
-// import { FaInstagram } from "react-icons/fa";
+import { FaFacebookF } from "react-icons/fa";
+import { FaYoutube } from "react-icons/fa";
+import { FaLinkedin } from "react-icons/fa";
+import { FaInstagram } from "react-icons/fa";
+import { FaFirefox } from "react-icons/fa";
 // import { FaAngleRight } from "react-icons/fa";
-// import { AiOutlineEnvironment } from 'react-icons/ai';
-// import { AiOutlinePhone } from 'react-icons/ai';
-// import { AiOutlineMail } from 'react-icons/ai';
+import { AiOutlineEnvironment } from 'react-icons/ai';
+import { AiOutlinePhone } from 'react-icons/ai';
+import { AiOutlineMail } from 'react-icons/ai';
+
+import { FaBars } from "react-icons/fa";
 
 import Banner from '../components/Banner/banner';
 import Sale from '../components/Sale/sale';
@@ -31,6 +34,8 @@ import BestSale from '../components/BestSale/bestSale';
 export default function Index() {
     const Products = useSelector((state) => state.products)
     const ProductsSale = Products.filter((e) => e.sale === true)
+
+    const [bar, setBar] = useState(false)
     return (
         <div className='container'>
             <nav>
@@ -50,6 +55,21 @@ export default function Index() {
                         <li className='box-sizing'> <AiOutlineUser /> </li>
                         <li className='box-sizing'> <AiOutlineShoppingCart /> </li>
                     </ul>
+                    {bar ?
+                        <div className='tab-bar' onClick={() => setBar(!bar)}>
+                            <h2>X</h2>
+                            <ul>
+                                <li>HOME</li>
+                                <li>SHOP</li>
+                                <li>NEWS</li>
+                                <li>CONTACT</li>
+                                <li>MY ACCOUNT</li>
+                            </ul>
+                        </div>
+                        :
+                        <div className='tab-bar' onClick={() => setBar(!bar)}>
+                            <h2><FaBars /></h2>
+                        </div>}
                 </div>
             </nav>
 
@@ -300,8 +320,49 @@ export default function Index() {
                 </div>
             </main>
 
-            <footer>
-
+            <footer >
+                <div className='container-footer width-1200 '>
+                    <div>
+                        <h2>MONDAY</h2>
+                        <p></p>
+                        <ul>
+                            <li><FaFacebookF /></li>
+                            <li><FaYoutube /></li>
+                            <li><FaLinkedin /></li>
+                            <li><FaInstagram /></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2>SPORT SNEAKER</h2>
+                        <ul>
+                            <li>Home</li>
+                            <li>Shop</li>
+                            <li>News</li>
+                            <li>Contact</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2>SUPPORT</h2>
+                        <ul>
+                            <li>
+                                <i><AiOutlineEnvironment /></i>
+                                Trảng Dài- Biên Hòa - Đồng Nai
+                            </li>
+                            <li>
+                                <i><AiOutlinePhone /></i>
+                                +84 817 222 222
+                            </li>
+                            <li>
+                                <i><AiOutlineMail /></i>
+                                mondaysport@sneaker.com
+                            </li>
+                            <li>
+                                <i><FaFirefox /></i>
+                                mondaysportsneaker.com.vn
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </footer>
         </div>
     )
