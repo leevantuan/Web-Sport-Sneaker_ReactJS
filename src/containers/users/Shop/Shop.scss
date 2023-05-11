@@ -17,7 +17,7 @@ main {
 .container-shop {
     display: grid;
     grid-template-columns: 25% 70%;
-    grid-template-rows: minmax(200px, 500px) minmax(200px, 2600px);
+    grid-template-rows: auto auto;
     grid-template-areas: 'a b';
     grid-gap: 5%;
     .left-container {
@@ -65,10 +65,11 @@ main {
     .right-container {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(13, 300px);
+        grid-template-rows: repeat(auto, 300px);
         grid-column-gap: 10px;
         grid-row-gap: 10px;
         > .item {
+            height: 300px;
             cursor: pointer;
             overflow: hidden;
             box-sizing: border-box;

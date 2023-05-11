@@ -10,9 +10,34 @@ export default function Shop() {
 
     const Products = useSelector((state) => state.products)
 
-    const HandleChange = (data) => {
+    const [ProductItems, setProductItems] = useState(Products);
+    const [ProductCategory, setProductCategory] = useState("");
 
+    const HandleChange = (data) => {
+        switch (data) {
+            case 'All':
+                setProductItems(Products)
+                return ProductItems;
+            case 'Price-1':
+                setProductItems(Products.filter((state) => state.price < 200))
+                return ProductItems;
+            case 'Price-2':
+                setProductItems(Products.filter((state) => state.price > 200 && state.price < 251))
+                return ProductItems;
+            case 'Price-3':
+                setProductItems(Products.filter((state) => state.price > 250 && state.price < 301))
+                return ProductItems;
+            case 'Price-4':
+                setProductItems(Products.filter((state) => state.price > 300 && state.price < 351))
+                return ProductItems;
+            case 'Price-5':
+                setProductItems(Products.filter((state) => state.price > 351))
+                return ProductItems;
+            default:
+                return ProductItems;
+        }
     }
+
     return (
         <main>
             <div className='container-shop width-1200'>
@@ -25,27 +50,23 @@ export default function Shop() {
                         </div>
                         <div>
                             <input type='radio' name='Price' value={"Price-1"} onChange={() => HandleChange("Price-1")} />
-                            <p>From $ 0 to $ 100</p>
+                            <p>From $ 0 to $ 200</p>
                         </div>
                         <div>
                             <input type='radio' name='Price' value={"Price-2"} onChange={() => HandleChange("Price-2")} />
-                            <p>From $ 101 to $ 200</p>
+                            <p>From $ 201 to $ 250</p>
                         </div>
                         <div>
                             <input type='radio' name='Price' value={"Price-3"} onChange={() => HandleChange("Price-3")} />
-                            <p>From $ 201 to $ 300</p>
+                            <p>From $ 251 to $ 300</p>
                         </div>
                         <div>
                             <input type='radio' name='Price' value={"Price-4"} onChange={() => HandleChange("Price-4")} />
-                            <p>From $ 301 to $ 400</p>
+                            <p>From $ 301 to $ 350</p>
                         </div>
                         <div>
                             <input type='radio' name='Price' value={"Price-5"} onChange={() => HandleChange("Price-5")} />
-                            <p>From $ 401 to $ 500</p>
-                        </div>
-                        <div>
-                            <input type='radio' name='Price' value={"Price-6"} onChange={() => HandleChange("Price-6")} />
-                            <p>From $ 500 and up</p>
+                            <p>From $ 351 and up</p>
                         </div>
                     </div>
                     <div className='category'>
@@ -69,9 +90,9 @@ export default function Shop() {
                     </div>
                 </div>
                 <div className='right-container'>
-                    {Products.map((e) => {
+                    {ProductItems.map((e) => {
                         return (
-                            <Product key={e.id} img={e.img} name={e.name} price={e.price} />
+                            <Product key={e.id} img={e.img} name={e.name} price={e.price} category={e.category} />
                         )
                     })}
                 </div>

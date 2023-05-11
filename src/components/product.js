@@ -10,6 +10,7 @@ export default function Product(props) {
         <div className='item'>
             <img src={props.img} alt='' />
             <h3>{props.name}</h3>
+            <p>{props.category}</p>
             <span>
                 <p>$ {props.price}</p>
                 <ul>
