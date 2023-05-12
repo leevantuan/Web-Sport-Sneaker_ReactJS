@@ -23,7 +23,22 @@ main {
     .left-container {
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: auto auto;
+        grid-template-rows: 100px 400px 350px 50px;
+        > .sort {
+            > select {
+                cursor: pointer;
+                width: 100%;
+                font-size: $fz18;
+                text-align: center;
+                padding: 1rem 0;
+                font-weight: bold;
+                color: $black;
+                letter-spacing: 2px;
+                > option {
+                    padding: 0.5rem 0;
+                }
+            }
+        }
         > .price {
             border: 1px solid $black;
             > h2 {
@@ -60,6 +75,16 @@ main {
                     margin-right: 10px;
                 }
             }
+        }
+        > .remove-filter {
+            width: 100%;
+            height: 100%;
+            border: 1px solid $black;
+            margin-top: 30px;
+            text-align: center;
+            letter-spacing: 4px;
+            cursor: pointer;
+            background-color: $yellow;
         }
     }
     .right-container {

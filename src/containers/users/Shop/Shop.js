@@ -10,38 +10,90 @@ export default function Shop() {
 
     const Products = useSelector((state) => state.products)
 
-    const [ProductItems, setProductItems] = useState(Products);
     const [ProductCategory, setProductCategory] = useState("");
+    const [PriceFrom, setPriceFrom] = useState(0);
+    const [PriceTo, setPriceTo] = useState(1000);
 
     const HandleChange = (data) => {
         switch (data) {
             case 'All':
-                setProductItems(Products)
-                return ProductItems;
+                setPriceFrom(0);
+                setPriceTo(1000)
+                break;
             case 'Price-1':
-                setProductItems(Products.filter((state) => state.price < 200))
-                return ProductItems;
+                setPriceFrom(0);
+                setPriceTo(200)
+                break;
             case 'Price-2':
-                setProductItems(Products.filter((state) => state.price > 200 && state.price < 251))
-                return ProductItems;
+                setPriceFrom(200);
+                setPriceTo(251)
+                break;
             case 'Price-3':
-                setProductItems(Products.filter((state) => state.price > 250 && state.price < 301))
-                return ProductItems;
+                setPriceFrom(250);
+                setPriceTo(301)
+                break;
             case 'Price-4':
-                setProductItems(Products.filter((state) => state.price > 300 && state.price < 351))
-                return ProductItems;
+                setPriceFrom(300);
+                setPriceTo(351)
+                break;
             case 'Price-5':
-                setProductItems(Products.filter((state) => state.price > 351))
-                return ProductItems;
+                setPriceFrom(351);
+                setPriceTo(1000)
+                break;
+            case 'Category':
+                setProductCategory("")
+                return setProductCategory;
+            case 'Jordan 1 Mid 2023':
+                setProductCategory("Jordan 1 Mid 2023")
+                return setProductCategory;
+            case 'Jordan 1 High 2023':
+                setProductCategory("Jordan 1 High 2023")
+                return setProductCategory;
+            case 'Jordan 1 Zoom 2023':
+                setProductCategory("Jordan 1 Zoom 2023")
+                return setProductCategory;
             default:
-                return ProductItems;
+                return Products;
         }
+    }
+
+    const ProductItems = Products.filter((state) => state.price > PriceFrom && state.price < PriceTo && state.category.includes(ProductCategory));
+
+    const options = [
+        { id: "1", value: "DEFAULT" },
+        { id: "2", value: "Price Low - Hight" },
+        { id: "3", value: "Price Hight - Low" },
+    ]
+
+    const [sort, setSort] = useState(options[0].value);
+
+    let ProductSort = ProductItems;
+
+    const HandleChangeSort = (data) => {
+        setSort(data.target.value);
+    }
+    if (sort === "Price Low - Hight") {
+        ProductSort = [...ProductItems].sort((a, b) => a.price - b.price);
+    }
+    else if (sort === "Price Hight - Low") {
+        ProductSort = [...ProductItems].sort((a, b) => b.price - a.price);
+    } else {
+        ProductSort = ProductItems;
     }
 
     return (
         <main>
             <div className='container-shop width-1200'>
                 <div className='left-container'>
+                    <div className='sort'>
+                        <select value={sort} onChange={HandleChangeSort}>
+                            {options.map((e) => {
+                                return (
+                                    <option key={e.id} value={e.value}>{e.value}</option>
+                                )
+                            })}
+                        </select>
+                    </div>
                     <div className='price'>
                         <h2>Price</h2>
                         <div>
@@ -88,9 +140,12 @@ export default function Shop() {
                             <p>Jordan 1 Zoom 2023</p>
                         </div>
                     </div>
+                    <div className='remove-filter'>
+                        <p>REMOVE FILTER</p>
+                    </div>
                 </div>
                 <div className='right-container'>
-                    {ProductItems.map((e) => {
+                    {ProductSort.map((e) => {
                         return (
                             <Product key={e.id} img={e.img} name={e.name} price={e.price} category={e.category} />
                         )
