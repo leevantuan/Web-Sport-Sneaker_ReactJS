@@ -1,13 +1,13 @@
 import React from 'react';
 import './body.scss'
 import './product.scss'
-import { FaRegStar } from "react-icons/fa";
 
+import { Link } from 'react-router-dom';
+import { FaRegStar } from "react-icons/fa";
 
 export default function Product(props) {
     return (
-
-        <div className='item'>
+        <Link className='item' to={`/Detail/${props.id}`}>
             <img src={props.img} alt='' />
             <h3>{props.name}</h3>
             <p>{props.category}</p>
@@ -21,6 +21,6 @@ export default function Product(props) {
                     <li><FaRegStar /></li>
                 </ul>
             </span>
-        </div>
+        </Link>
     )
 }

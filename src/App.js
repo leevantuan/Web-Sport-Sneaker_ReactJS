@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import Index from '../src/routers/index';
 import '../src/components/body.scss';
 
@@ -8,9 +9,12 @@ import store from './redux/store';
 
 function App() {
     return (
-        <Provider store={store}>
-            <Index />
-        </Provider>
+        <BrowserRouter>
+            <Provider store={store}>
+                <Index />
+            </Provider>
+        </BrowserRouter>
+
     );
 }
 

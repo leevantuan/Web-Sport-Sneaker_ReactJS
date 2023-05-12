@@ -81,6 +81,9 @@ export default function Shop() {
         ProductSort = ProductItems;
     }
 
+    const RemoveFilter = () => {
+        window.location.reload();
+    }
     return (
         <main>
             <div className='container-shop width-1200'>
@@ -140,14 +143,14 @@ export default function Shop() {
                             <p>Jordan 1 Zoom 2023</p>
                         </div>
                     </div>
-                    <div className='remove-filter'>
+                    <div className='remove-filter' onClick={RemoveFilter}>
                         <p>REMOVE FILTER</p>
                     </div>
                 </div>
                 <div className='right-container'>
                     {ProductSort.map((e) => {
                         return (
-                            <Product key={e.id} img={e.img} name={e.name} price={e.price} category={e.category} />
+                            <Product key={e.id} img={e.img} name={e.name} price={e.price} category={e.category} id={e.id} />
                         )
                     })}
                 </div>

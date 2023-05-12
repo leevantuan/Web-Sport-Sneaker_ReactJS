@@ -12,9 +12,10 @@ $fz24: 24px;
 $fz28: 28px;
 
 main {
-    margin-top: 120px;
+    margin-top: 80px;
 }
 .container-shop {
+    padding-top: 40px;
     display: grid;
     grid-template-columns: 25% 70%;
     grid-template-rows: auto auto;

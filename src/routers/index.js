@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import '../components/body.scss'
 import './router.scss'
 
+import { Routes, Route, Link } from 'react-router-dom';
+
 import { AiOutlineUser } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { AiOutlineShoppingCart } from "react-icons/ai";
@@ -15,11 +17,19 @@ import { AiOutlinePhone } from 'react-icons/ai';
 import { AiOutlineMail } from 'react-icons/ai';
 import { FaBars } from "react-icons/fa";
 
-// import Home from '../containers/users/Home/Home';
+import Home from '../containers/users/Home/Home';
 import Shop from '../containers/users/Shop/Shop';
+import News from '../containers/users/News/News';
+import Contact from '../containers/users/Contact/Contact';
+import Detail from '../containers/users/Detail/Detail';
 
 export default function Index() {
     const [bar, setBar] = useState(false)
+    const [home, setHome] = useState(true)
+    const [shop, setShop] = useState(false)
+    const [news, setNews] = useState(false)
+    const [contact, setContact] = useState(false)
+
     return (
         <div className='container'>
             <nav>
@@ -29,10 +39,42 @@ export default function Index() {
                         <h1> Monday.</h1>
                     </div>
                     <ul className='menu dsFlex justify-between box-sizing'>
-                        <li className='menu-item box-sizing active'>Home</li>
-                        <li className='menu-item box-sizing'>Shop</li>
-                        <li className='menu-item box-sizing'>News</li>
-                        <li className='menu-item box-sizing'>Contact</li>
+                        <li
+                            className={home ? 'menu-item box-sizing active' : 'menu-item box-sizing'}
+                            onClick={() => {
+                                setHome(true)
+                                setShop(false)
+                                setNews(false)
+                                setContact(false)
+                            }}
+                        ><Link className='link' to="/">Home</Link></li>
+                        <li
+                            className={shop ? 'menu-item box-sizing active' : 'menu-item box-sizing'}
+                            onClick={() => {
+                                setHome(false)
+                                setShop(true)
+                                setNews(false)
+                                setContact(false)
+                            }}
+                        ><Link className='link' to="/Shop">Shop</Link></li>
+                        <li
+                            className={news ? 'menu-item box-sizing active' : 'menu-item box-sizing'}
+                            onClick={() => {
+                                setHome(false)
+                                setShop(false)
+                                setNews(true)
+                                setContact(false)
+                            }}
+                        ><Link className='link' to="/News">News</Link></li>
+                        <li
+                            className={contact ? 'menu-item box-sizing active' : 'menu-item box-sizing'}
+                            onClick={() => {
+                                setHome(false)
+                                setShop(false)
+                                setNews(false)
+                                setContact(true)
+                            }}
+                        ><Link className='link' to="/Contact">Contact</Link></li>
                     </ul>
                     <ul className='search dsFlex'>
                         <li className='box-sizing'> <AiOutlineSearch /> </li>
@@ -43,10 +85,10 @@ export default function Index() {
                         <div className='tab-bar' onClick={() => setBar(!bar)}>
                             <h2>X</h2>
                             <ul>
-                                <li>HOME</li>
-                                <li>SHOP</li>
-                                <li>NEWS</li>
-                                <li>CONTACT</li>
+                                <li><Link className='link' to="/">Home</Link></li>
+                                <li><Link className='link' to="/Shop">Shop</Link></li>
+                                <li><Link className='link' to="/News">News</Link></li>
+                                <li><Link className='link' to="/Contact">Contact</Link></li>
                                 <li>MY ACCOUNT</li>
                             </ul>
                         </div>
@@ -57,8 +99,13 @@ export default function Index() {
                 </div>
             </nav>
 
-            {/* <Home /> */}
-            <Shop />
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/Shop" element={<Shop />} />
+                <Route path="/News" element={<News />} />
+                <Route path="/Contact" element={<Contact />} />
+                <Route path="/Detail/:id" element={<Detail />} />
+            </Routes>
 
             <footer >
                 <div className='container-footer width-1200 '>
