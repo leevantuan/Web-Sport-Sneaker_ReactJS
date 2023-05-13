@@ -12,7 +12,7 @@ export default function Pagination({ currentLastPage, totalPage, paginate }) {
         <div>
             <ul className='pagination'>
                 {PageNumber.map((number) => (
-                    <li key={number.id}>
+                    <li key={number}>
                         <Link to="/Shop" className='page-link' onClick={() => paginate(number)}>{number}</Link>
                     </li>
                 ))}
