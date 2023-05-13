@@ -3,6 +3,7 @@ import "./Shop.scss";
 import "../../../components/body.scss"
 
 import Product from '../../../components/product';
+import Pagination from '../../../components/Pagination/Pagination';
 
 import { useSelector } from 'react-redux';
 
@@ -14,6 +15,7 @@ export default function Shop() {
     const [PriceFrom, setPriceFrom] = useState(0);
     const [PriceTo, setPriceTo] = useState(1000);
 
+    //Filter Products
     const HandleChange = (data) => {
         switch (data) {
             case 'All':
@@ -59,6 +61,7 @@ export default function Shop() {
 
     const ProductItems = Products.filter((state) => state.price > PriceFrom && state.price < PriceTo && state.category.includes(ProductCategory));
 
+    //Sort Products
     const options = [
         { id: "1", value: "DEFAULT" },
         { id: "2", value: "Price Low - Hight" },
@@ -80,10 +83,23 @@ export default function Shop() {
     } else {
         ProductSort = ProductItems;
     }
-
+    //remove filter
     const RemoveFilter = () => {
         window.location.reload();
     }
+
+    //Pagination
+
+    const [currentFistPage, setCurrentFistPage] = useState(1);
+    const [currentLastPage] = useState(12);
+
+    //Get current
+    const indexOfLastPost = currentFistPage * currentLastPage;
+    const indexOfFistPost = indexOfLastPost - currentLastPage;
+    const CurrentPost = ProductSort.slice(indexOfFistPost, indexOfLastPost);
+
+    //Page number
+    const paginate = (number) => { setCurrentFistPage(number) };
     return (
         <main>
             <div className='container-shop width-1200'>
@@ -148,11 +164,12 @@ export default function Shop() {
                     </div>
                 </div>
                 <div className='right-container'>
-                    {ProductSort.map((e) => {
+                    {CurrentPost.map((e) => {
                         return (
                             <Product key={e.id} img={e.img} name={e.name} price={e.price} category={e.category} id={e.id} />
                         )
                     })}
+                    <Pagination currentLastPage={currentLastPage} totalPage={ProductSort.length} paginate={paginate} />
                 </div>
             </div>
         </main>
