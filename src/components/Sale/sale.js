@@ -3,11 +3,12 @@ import '../../components/body.scss'
 import './sale.scss'
 import { FaRegStar } from "react-icons/fa";
 
+import { Link } from 'react-router-dom';
 
 export default function Sale(props) {
     return (
 
-        <div className='item'>
+        <Link className='item' to={`/Detail/${props.id}`}>
             <img src={props.img} alt='' />
             <h3>{props.name}</h3>
             <span>
@@ -20,7 +21,7 @@ export default function Sale(props) {
                     <li><FaRegStar /></li>
                 </ul>
             </span>
-        </div>
+        </Link>
 
     )
 }

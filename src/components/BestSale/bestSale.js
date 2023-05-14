@@ -8,6 +8,8 @@ import { FaRegStar } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import data from "../../data/data";
 
+import { Link } from 'react-router-dom';
+
 class BestSale extends React.Component {
 
     render() {
@@ -23,7 +25,7 @@ class BestSale extends React.Component {
                 <Slider {...settings}>
                     {data.map((e) => {
                         return (
-                            <div key={e.id}>
+                            <Link key={e.id} className="link-sale" to={`/Detail/${e.id}`} >
                                 <div className="best-sale-item">
                                     <img src={e.img} alt="" />
                                     <h2>{e.name}</h2>
@@ -42,7 +44,7 @@ class BestSale extends React.Component {
                                         <i><FaHeart /></i>
                                     </span>
                                 </div>
-                            </div>
+                            </Link>
                         )
                     })}
                 </Slider>

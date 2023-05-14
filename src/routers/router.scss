@@ -109,6 +109,49 @@ footer {
     height: 100%;
     padding: 1rem 1.5rem;
 }
+
+//Search
+.search-hidden {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #55555562;
+    z-index: 99;
+    transition: all 0.3s ease;
+}
+.list-search {
+    position: fixed;
+    top: 0;
+    left: 35%;
+    z-index: 999;
+}
+.input-search {
+    width: 600px;
+    margin: 20px auto;
+    > input {
+        width: 100%;
+        padding: 0.6rem 1rem;
+        font-size: $fz18;
+        border-radius: 5px;
+        border: none;
+        box-sizing: border-box;
+        transition: all 0.1s ease;
+        &:focus-visible {
+            transition: all 0.1s ease;
+            outline: 2px solid $yellow;
+        }
+    }
+}
+.list-search-product {
+    width: 600px;
+    max-height: 600px;
+    margin: -20px auto 0;
+    background-color: $white;
+    overflow: hidden;
+    box-shadow: 0 2px 4px $black;
+}
 /// responsive
 
 @media only screen and (max-width: 1024px) {

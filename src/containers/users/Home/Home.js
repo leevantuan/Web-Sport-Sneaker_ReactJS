@@ -60,7 +60,7 @@ export default function Home() {
                     <div className='product-sale' data-aos="fade-up-left" data-aos-duration="1000">
                         {ProductsSale.map((e) => {
                             return (
-                                <Sale key={e.id} img={e.img} name={e.name} price={e.price} />
+                                <Sale key={e.id} img={e.img} name={e.name} price={e.price} id={e.id} />
                             )
                         })}
                     </div>

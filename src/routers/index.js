@@ -22,14 +22,24 @@ import Shop from '../containers/users/Shop/Shop';
 import News from '../containers/users/News/News';
 import Contact from '../containers/users/Contact/Contact';
 import Detail from '../containers/users/Detail/Detail';
+import Item from '../components/ItemSearch/Item';
+import { useSelector } from 'react-redux';
 
 export default function Index() {
     const [bar, setBar] = useState(false)
-    const [home, setHome] = useState(true)
-    const [shop, setShop] = useState(false)
-    const [news, setNews] = useState(false)
-    const [contact, setContact] = useState(false)
+    const [showSearch, setShowSearch] = useState(false)
+    const [inputSearch, setInputSearch] = useState(false)
+    const [textSearch, setTextSearch] = useState("")
+    const [list, setList] = useState(false)
 
+    const Products = useSelector((state) => state.products)
+
+    const ProductsSearch = Products.filter((e) => e.name.includes(textSearch))
+
+    const HandleClickDetail = () => {
+        setShowSearch(false)
+        setInputSearch(false)
+    }
     return (
         <div className='container'>
             <nav>
@@ -40,44 +50,28 @@ export default function Index() {
                     </div>
                     <ul className='menu dsFlex justify-between box-sizing'>
                         <li
-                            className={home ? 'menu-item box-sizing active' : 'menu-item box-sizing'}
-                            onClick={() => {
-                                setHome(true)
-                                setShop(false)
-                                setNews(false)
-                                setContact(false)
-                            }}
+                            className='menu-item box-sizing'
                         ><Link className='link' to="/">Home</Link></li>
                         <li
-                            className={shop ? 'menu-item box-sizing active' : 'menu-item box-sizing'}
-                            onClick={() => {
-                                setHome(false)
-                                setShop(true)
-                                setNews(false)
-                                setContact(false)
-                            }}
+                            className='menu-item box-sizing'
+
                         ><Link className='link' to="/Shop">Shop</Link></li>
                         <li
-                            className={news ? 'menu-item box-sizing active' : 'menu-item box-sizing'}
-                            onClick={() => {
-                                setHome(false)
-                                setShop(false)
-                                setNews(true)
-                                setContact(false)
-                            }}
+                            className='menu-item box-sizing'
+
                         ><Link className='link' to="/News">News</Link></li>
                         <li
-                            className={contact ? 'menu-item box-sizing active' : 'menu-item box-sizing'}
-                            onClick={() => {
-                                setHome(false)
-                                setShop(false)
-                                setNews(false)
-                                setContact(true)
-                            }}
+                            className='menu-item box-sizing'
+
                         ><Link className='link' to="/Contact">Contact</Link></li>
                     </ul>
                     <ul className='search dsFlex'>
-                        <li className='box-sizing'> <AiOutlineSearch /> </li>
+                        <li className='box-sizing'
+                            onClick={() => {
+                                setShowSearch(true)
+                                setInputSearch(true)
+                            }}
+                        > <AiOutlineSearch /> </li>
                         <li className='box-sizing'> <AiOutlineUser /> </li>
                         <li className='box-sizing'> <AiOutlineShoppingCart /> </li>
                     </ul>
@@ -99,6 +93,27 @@ export default function Index() {
                 </div>
             </nav>
 
+            <div className='search-hidden' hidden={showSearch ? false : true}
+                onClick={() => {
+                    setShowSearch(false)
+                    setInputSearch(false)
+                }}>
+            </div>
+
+            <div className='list-search' hidden={inputSearch ? false : true} >
+                <div className='input-search' onClick={() => setShowSearch(true)}>
+                    <input
+                        type='text'
+                        placeholder='Enter Search ...'
+                        onChange={(e) => setTextSearch(e.target.value)}
+                        onFocus={() => setList(true)} />
+                </div>
+                {
+                    list ? <div className='list-search-product'>
+                        <Item ProductsSearch={ProductsSearch} HandleClickDetail={HandleClickDetail} />
+                    </div> : <div></div>
+                }
+            </div>
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/Shop" element={<Shop />} />

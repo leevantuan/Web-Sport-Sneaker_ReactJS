@@ -75,6 +75,7 @@ export default function Shop() {
     const HandleChangeSort = (data) => {
         setSort(data.target.value);
     }
+
     if (sort === "Price Low - Hight") {
         ProductSort = [...ProductItems].sort((a, b) => a.price - b.price);
     }
@@ -83,6 +84,7 @@ export default function Shop() {
     } else {
         ProductSort = ProductItems;
     }
+
     //remove filter
     const RemoveFilter = () => {
         window.location.reload();
@@ -100,6 +102,7 @@ export default function Shop() {
 
     //Page number
     const paginate = (number) => { setCurrentFistPage(number) };
+
     return (
         <main>
             <div className='container-shop width-1200'>
