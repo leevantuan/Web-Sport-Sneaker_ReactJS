@@ -1,0 +1,108 @@
+.category-container {
+    width: 800px;
+    margin: 150px auto;
+    font-size: 1rem;
+    .title-table {
+        display: flex;
+        justify-content: space-between;
+        > button {
+            align-self: center;
+            font-size: 1rem;
+            height: 40px;
+            border: none;
+            border-radius: 4px;
+            background-color: #03ff25;
+            color: black;
+            font-weight: 600;
+            padding: 0 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            &:hover {
+                transition: all 0.3s ease;
+                background-color: #03ff2586;
+            }
+        }
+    }
+    .table-category {
+        font-size: 1rem;
+        margin-top: 40px;
+        width: 100%;
+        border: 1px solid grey;
+        > thead > tr > th {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid black;
+        }
+        > tbody > tr > td {
+            text-align: center;
+            padding: 0.5rem 0;
+            > button {
+                box-sizing: border-box;
+                font-size: 1rem;
+            }
+        }
+    }
+}
+
+.modal-create-category {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(110, 110, 110, 0.397);
+    z-index: 999;
+    // display: flex;
+    .create-category {
+        width: 600px;
+        min-height: 250px;
+        background-color: #fff;
+        margin: 100px auto;
+        padding: 0.5rem 1.5rem;
+        box-sizing: border-box;
+        .title-create-category {
+            display: flex;
+            justify-content: space-between;
+            > i {
+                height: 28px;
+                font-size: 28px;
+                padding: 8px;
+                margin-top: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                &:hover {
+                    transition: all 0.3s ease;
+                    background-color: #9e9e9ed2;
+                }
+            }
+        }
+        .input-category {
+            font-size: 1.2rem;
+            margin: 1rem 0;
+            > input {
+                width: 90%;
+                font-size: 1rem;
+                padding: 0.5rem 1rem;
+                border: 0.5px solid grey;
+                &:focus-visible {
+                    outline: 2px solid rgba(0, 81, 255, 0.699);
+                }
+            }
+        }
+        .btn-category {
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background-color: rgba(0, 81, 255, 0.699);
+            &:hover {
+                background-color: rgb(0, 81, 255);
+                transition: all 0.3s ease;
+            }
+        }
+    }
+}

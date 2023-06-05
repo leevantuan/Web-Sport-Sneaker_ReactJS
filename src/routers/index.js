@@ -23,7 +23,15 @@ import News from '../containers/users/News/News';
 import Contact from '../containers/users/Contact/Contact';
 import Detail from '../containers/users/Detail/Detail';
 import Item from '../components/ItemSearch/Item';
+
+//ath
+import Category from '../containers/auth/categories/category';
+import Product from '../containers/auth/products/products';
 import { useSelector } from 'react-redux';
+//
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Index() {
     const [bar, setBar] = useState(false)
@@ -120,7 +128,24 @@ export default function Index() {
                 <Route path="/News" element={<News />} />
                 <Route path="/Contact" element={<Contact />} />
                 <Route path="/Detail/:id" element={<Detail />} />
+
+                <Route path="/Auth/Category" element={<Category />} />
+                <Route path="/Auth/Product" element={<Product />} />
+
             </Routes>
+
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
 
             <footer >
                 <div className='container-footer width-1200 '>
