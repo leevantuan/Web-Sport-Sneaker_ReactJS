@@ -1,0 +1,25 @@
+footer {
+    margin-top: 60px;
+    border-top: 0.5px solid rgba(128, 128, 128, 0.438);
+}
+.container-footer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 300px;
+    grid-template-areas: 'div-1 div-2 div-3';
+    > div {
+        text-align: center;
+        > ul {
+            list-style: none;
+        }
+    }
+    > div:nth-child(1) {
+        grid-area: div-1;
+    }
+    > div:nth-child(2) {
+        grid-area: div-2;
+    }
+    > div:nth-child(3) {
+        grid-area: div-3;
+    }
+}

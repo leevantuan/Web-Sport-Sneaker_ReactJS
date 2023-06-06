@@ -1,41 +1,21 @@
 import React, { useState } from 'react';
-import '../components/body.scss'
-import './router.scss'
+import '../../components/body.scss'
+import './header.scss'
 
 import { Link } from 'react-router-dom';
 
 import { AiOutlineUser } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { FaFacebookF } from "react-icons/fa";
-import { FaYoutube } from "react-icons/fa";
-import { FaLinkedin } from "react-icons/fa";
-import { FaInstagram } from "react-icons/fa";
-import { FaFirefox } from "react-icons/fa";
-import { AiOutlineEnvironment } from 'react-icons/ai';
-import { AiOutlinePhone } from 'react-icons/ai';
-import { AiOutlineMail } from 'react-icons/ai';
 import { FaBars } from "react-icons/fa";
 
-// import Home from '../containers/users/Home/Home';
-// import Shop from '../containers/users/Shop/Shop';
-// import News from '../containers/users/News/News';
-// import Contact from '../containers/users/Contact/Contact';
-// import Detail from '../containers/users/Detail/Detail';
-import Item from '../components/ItemSearch/Item';
-
-//ath
-// import Category from '../containers/auth/categories/category';
-// import Product from '../containers/auth/products/products';
-// import Image from '../containers/auth/image/image';
-// import LoginAuth from '../containers/auth/loginAuth/loginAuth';
+import Item from '../../components/ItemSearch/Item';
 import { useSelector } from 'react-redux';
-//
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function Index() {
+export default function Header() {
     const [bar, setBar] = useState(false)
     const [showSearch, setShowSearch] = useState(false)
     const [inputSearch, setInputSearch] = useState(false)
@@ -51,11 +31,11 @@ export default function Index() {
         setInputSearch(false)
     }
     return (
-        <div className='container'>
+        <>
             <nav>
                 <div className='nav-container dsFlex justify-between width-1200'>
                     <div className='logo dsFlex'>
-                        <img src={require('../assets/logo.png')} alt='logo' />
+                        <img src={require('../../assets/logo.png')} alt='logo' />
                         <h1> Monday.</h1>
                     </div>
                     <ul className='menu dsFlex justify-between box-sizing'>
@@ -138,7 +118,7 @@ export default function Index() {
                 theme="light"
             />
 
-            <footer >
+            {/* <footer >
                 <div className='container-footer width-1200 '>
                     <div>
                         <h2>MONDAY</h2>
@@ -181,7 +161,7 @@ export default function Index() {
                         </ul>
                     </div>
                 </div>
-            </footer>
-        </div>
+            </footer> */}
+        </>
     )
 }

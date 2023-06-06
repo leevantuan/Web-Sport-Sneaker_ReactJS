@@ -1,0 +1,33 @@
+.container-auth-navbar {
+    width: 100%;
+    background-color: #333;
+    height: 80px;
+    .auth-navbar {
+        width: 1000px;
+        margin: auto;
+        > ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            > li {
+                float: left;
+                .link-auth-navbar {
+                    font-size: 24px;
+                    display: block;
+                    color: white;
+                    text-align: center;
+                    padding: 25px 30px;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                    &:hover {
+                        background-color: #04aa6d;
+                        transition: all 0.3s ease;
+                    }
+                }
+            }
+        }
+    }
+}
