@@ -8,7 +8,13 @@ import AuthNavbar from '../../../components/Auth-navbar/Auth-navbar';
 import { AiOutlineClose } from "react-icons/ai";
 import { toast } from 'react-toastify';
 
+import isLoginAuth from '../isLoginAuth';
+import { Link } from 'react-router-dom';
+
 export default function Category() {
+
+    const check = isLoginAuth();
+
     const [loading, setLoading] = useState(false);
     const [category, setCategory] = useState([]);
 
@@ -82,104 +88,111 @@ export default function Category() {
         setShowDelete(false);
         toast.success(`Delete a category success!`);
     }
-    return (
-        <div className='container'>
-            <AuthNavbar />
-            <main>
-                <div className='category-container'>
-                    <div className='title-table'>
-                        <h2>Category List</h2>
-                        <button onClick={() => setShowCreate(true)}>Add new</button>
-                    </div>
-                    <table className='table-category' >
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>CATEGORY NAME</th>
-                                <th>MADE IN</th>
-                                <th>ACTIONS</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            {
-                                category.map((e) => (
-                                    <tr key={e.id}>
-                                        <th>{e.id}</th>
-                                        <td>{e.CategoryName}</td>
-                                        <td>{e.MadeIn}</td>
-                                        <td>
-                                            <button onClick={() => HandleClickEdit(e)}>Edit</button>
-                                            <button onClick={() => HandleClickDelete(e)}>Delete</button>
-                                        </td>
-                                    </tr>
-                                ))
-                            }
-
-                        </tbody>
-                    </table>
-
-                </div>
-
-                {/* Create a category */}
-                <div className='modal-create-category' hidden={showCreate ? false : true}>
-                    <div className='create-category'>
-                        <div className='title-create-category'>
-                            <h2>Create a Category</h2>
-                            <i onClick={() => setShowCreate(false)} ><AiOutlineClose /></i>
+    if (check) {
+        return (
+            <div className='container'>
+                <AuthNavbar />
+                <main>
+                    <div className='category-container'>
+                        <div className='title-table'>
+                            <h2>Category List</h2>
+                            <button onClick={() => setShowCreate(true)}>Add new</button>
                         </div>
-                        <form>
-                            <div className='input-category'>
-                                <label>Category name: </label>
-                                <input type='text' placeholder='Category name ...' onChange={(e) => setCategoryText(e.target.value)} required />
-                            </div>
-                            <div className='input-category'>
-                                <label>Made in category: </label>
-                                <input type='text' placeholder='Made in category ...' onChange={(e) => setMadeInText(e.target.value)} required />
-                            </div>
-                            <button className='btn-category' onClick={() => HandleCreate()}>Create</button>
-                        </form>
-                    </div>
-                </div>
+                        <table className='table-category' >
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>CATEGORY NAME</th>
+                                    <th>MADE IN</th>
+                                    <th>ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-                {/* update a category */}
-                <div className='modal-create-category' hidden={showUpdate ? false : true}>
-                    <div className='create-category'>
-                        <div className='title-create-category'>
-                            <h2>Create a Category</h2>
-                            <i onClick={() => setShowUpdate(false)} ><AiOutlineClose /></i>
-                        </div>
-                        <div>
-                            <div className='input-category'>
-                                <label>Category name: </label>
-                                <input type='text' value={CategoryText} onChange={(e) => setCategoryText(e.target.value)} />
+                                {
+                                    category.map((e) => (
+                                        <tr key={e.id}>
+                                            <th>{e.id}</th>
+                                            <td>{e.CategoryName}</td>
+                                            <td>{e.MadeIn}</td>
+                                            <td>
+                                                <button onClick={() => HandleClickEdit(e)}>Edit</button>
+                                                <button onClick={() => HandleClickDelete(e)}>Delete</button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    {/* Create a category */}
+                    <div className='modal-create-category' hidden={showCreate ? false : true}>
+                        <div className='create-category'>
+                            <div className='title-create-category'>
+                                <h2>Create a Category</h2>
+                                <i onClick={() => setShowCreate(false)} ><AiOutlineClose /></i>
                             </div>
-                            <div className='input-category'>
-                                <label>Made in category: </label>
-                                <input type='text' value={MadeInText} onChange={(e) => setMadeInText(e.target.value)} />
-                            </div>
-                            <h2 hidden>{FindCategory.id}</h2>
-                            <button className='btn-category' onClick={() => HandleUpdate(FindCategory)}>Update</button>
+                            <form>
+                                <div className='input-category'>
+                                    <label>Category name: </label>
+                                    <input type='text' placeholder='Category name ...' onChange={(e) => setCategoryText(e.target.value)} required />
+                                </div>
+                                <div className='input-category'>
+                                    <label>Made in category: </label>
+                                    <input type='text' placeholder='Made in category ...' onChange={(e) => setMadeInText(e.target.value)} required />
+                                </div>
+                                <button className='btn-category' onClick={() => HandleCreate()}>Create</button>
+                            </form>
                         </div>
                     </div>
-                </div>
 
-                {/* delete a category */}
-                <div className='modal-create-category' hidden={showDelete ? false : true}>
-                    <div className='create-category'>
-                        <div className='title-create-category'>
-                            <h2>Delete a Category</h2>
-                            <i onClick={() => setShowDelete(false)} ><AiOutlineClose /></i>
-                        </div>
-                        <div>
-                            <h2>Are you sure delete category with ID: {FindCategory.id}?</h2>
-                            <button className='btn-category' onClick={() => HandleDelete()}>Delete</button>
+                    {/* update a category */}
+                    <div className='modal-create-category' hidden={showUpdate ? false : true}>
+                        <div className='create-category'>
+                            <div className='title-create-category'>
+                                <h2>Create a Category</h2>
+                                <i onClick={() => setShowUpdate(false)} ><AiOutlineClose /></i>
+                            </div>
+                            <div>
+                                <div className='input-category'>
+                                    <label>Category name: </label>
+                                    <input type='text' value={CategoryText} onChange={(e) => setCategoryText(e.target.value)} />
+                                </div>
+                                <div className='input-category'>
+                                    <label>Made in category: </label>
+                                    <input type='text' value={MadeInText} onChange={(e) => setMadeInText(e.target.value)} />
+                                </div>
+                                <h2 hidden>{FindCategory.id}</h2>
+                                <button className='btn-category' onClick={() => HandleUpdate(FindCategory)}>Update</button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-            </main>
-        </div>
+                    {/* delete a category */}
+                    <div className='modal-create-category' hidden={showDelete ? false : true}>
+                        <div className='create-category'>
+                            <div className='title-create-category'>
+                                <h2>Delete a Category</h2>
+                                <i onClick={() => setShowDelete(false)} ><AiOutlineClose /></i>
+                            </div>
+                            <div>
+                                <h2>Are you sure delete category with ID: {FindCategory.id}?</h2>
+                                <button className='btn-category' onClick={() => HandleDelete()}>Delete</button>
+                            </div>
+                        </div>
+                    </div>
 
-    )
+                </main>
+            </div>
+
+        )
+    }
+    else {
+        return (
+            <h1 style={{ width: "100vw", height: "100vh", display: "Flex", justifyContent: "center", alignItems: "center", fontSize: 50, margin: 0 }}><Link to="/Auth" >Login, Please!</Link></h1>
+        )
+    }
 }

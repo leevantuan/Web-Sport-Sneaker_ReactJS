@@ -17,7 +17,14 @@ import Product from './containers/auth/products/products';
 import Image from './containers/auth/image/image';
 import LoginAuth from './containers/auth/loginAuth/loginAuth';
 
+import LoginUser from './containers/users/Login/LoginUser';
+// import LogoutUser from './containers/users/Login/Logout';
+import Register from './containers/users/Login/Register';
+
 import store from './redux/store';
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
     return (
@@ -26,7 +33,10 @@ function App() {
                 {/* <Index /> */}
                 <Routes>
 
-                    <Route path="/" element={<Home />} />
+                    <Route path="/" element={<LoginUser />} />
+                    {/* <Route path="/logout" element={<LogoutUser />} /> */}
+                    <Route path="/Register" element={<Register />} />
+                    <Route path="/Home" element={<Home />} />
                     <Route path="/Shop" element={<Shop />} />
                     <Route path="/News" element={<News />} />
                     <Route path="/Contact" element={<Contact />} />
@@ -38,6 +48,19 @@ function App() {
                     <Route path="/Auth/Product" element={<Product />} />
                     <Route path="/Auth/Image" element={<Image />} />
                 </Routes>
+
+                <ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                />
             </Provider>
         </BrowserRouter>
 

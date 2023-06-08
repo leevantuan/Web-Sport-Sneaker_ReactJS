@@ -1,0 +1,97 @@
+.container-loginAuth {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #8bc6ec;
+    background-image: linear-gradient(135deg, #8bc6ec 18%, #9599e2 60%);
+    .content-loginAuth {
+        position: absolute;
+        top: 10%;
+        left: 40%;
+        width: 400px;
+        height: 400px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0px 2px 11px 3px rgba(242, 159, 159, 0.75);
+        -webkit-box-shadow: 0px 2px 11px 3px rgba(242, 159, 159, 0.75);
+        -moz-box-shadow: 0px 2px 11px 3px rgba(242, 159, 159, 0.75);
+        transition: all 0.3s ease;
+        &:hover {
+            transition: all 0.3s ease;
+            box-shadow: 0px 2px 11px 4px rgb(255, 119, 119, 0.75);
+            -webkit-box-shadow: 0px 2px 11px 4px rgb(255, 119, 119, 0.75);
+            -moz-box-shadow: 0px 2px 11px 4px rgb(255, 119, 119, 0.75);
+        }
+        .input-loginAuth {
+            padding: 24px;
+            margin-left: 16px;
+            > h2 {
+                text-align: center;
+                font-size: 32px;
+                letter-spacing: 2px;
+            }
+            .input-password {
+                position: relative;
+                > input {
+                    font-size: 16px;
+                    margin: 10px 0;
+                    padding: 8px 16px;
+                    box-sizing: border-box;
+                    width: 100%;
+                    border: none;
+                    outline: 2px solid rgb(150, 150, 150);
+                    &:focus-visible {
+                        outline: 2px solid red;
+                        border: none;
+                    }
+                }
+                > i {
+                    position: absolute;
+                    top: 20px;
+                    right: 45px;
+                }
+            }
+            > input {
+                font-size: 16px;
+                margin: 10px 0;
+                padding: 8px 16px;
+                box-sizing: border-box;
+                width: 100%;
+                border: none;
+                outline: 2px solid rgb(150, 150, 150);
+                &:focus-visible {
+                    outline: 2px solid red;
+                    border: none;
+                }
+            }
+            > label {
+                font-size: 18px;
+            }
+            .btn-login-register {
+                display: flex;
+                justify-content: flex-end;
+                > button {
+                    margin-top: 35px;
+                    margin-right: 30px;
+                    font-size: 20px;
+                    font-weight: 600;
+                    background-color: rgb(206, 206, 206);
+                    padding: 12px 28px;
+                    border: none;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    border-radius: 4px;
+                    &:hover {
+                        background-color: grey;
+                        transition: all 0rgb (104, 173, 1);
+                    }
+                }
+            }
+            > p {
+                margin: 0;
+                color: red;
+                font-size: 16px;
+            }
+        }
+    }
+}

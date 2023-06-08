@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import './loginAuth.scss'
+import './Login.scss'
 import axios from 'axios';
 
 import { FaEyeSlash } from "react-icons/fa";
@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 
-export default function LoginAuth() {
+export default function LoginUser() {
 
     let navigate = useNavigate();
 
@@ -18,25 +18,27 @@ export default function LoginAuth() {
 
     const [ShowPassword, setShowPassword] = useState(false);
 
-    const RoleID = "admin";
-
     const HandleClickLogin = async () => {
 
-        const { data } = await axios.post('http://localhost:8080/login-admin', { Phone: PhoneText, PassWord: PassWord, RoleID: RoleID });
+        const { data } = await axios.post('http://localhost:8080/login-users', { Phone: PhoneText, PassWord: PassWord });
         if (data.message === "success") {
             toast.success(data.message)
-            localStorage.setItem("tokenAdmin", data.token);
-            navigate("/Auth/Product", { replace: true });
+            localStorage.setItem("token", data.token);
+            navigate("/Home", { replace: true });
         }
         else {
             toast.error(data.message)
         }
     }
 
+    const HandleClickRegister = () => {
+        navigate("/Register", { replace: true });
+    }
     return (
-        <div className='container-loginAuth'>
-            <main className='content-loginAuth'>
-                <div className='input-loginAuth'>
+        <div className='container-login'>
+            <main className='content-login'>
+                <img src={require('../../../assets/login.jpg')} alt='' />
+                <div className='input-login'>
                     <h2>LOGIN</h2>
                     <label>Phone Number:</label>
                     <input type='text' placeholder='Enter phone number ....' onChange={(e) => setPhoneText(e.target.value)} />
@@ -50,7 +52,9 @@ export default function LoginAuth() {
                         }
 
                     </div>
+                    <div><Link className='link-forget'>Forget password?</Link></div>
                     <div className='btn-login-register'>
+                        <button onClick={() => HandleClickRegister()}>REGISTER</button>
                         <button onClick={() => HandleClickLogin()}>LOGIN</button>
                     </div>
                 </div>
@@ -58,4 +62,3 @@ export default function LoginAuth() {
         </div>
     )
 }
-

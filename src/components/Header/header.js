@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../components/body.scss'
 import './header.scss'
 
@@ -15,8 +15,16 @@ import { useSelector } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+
 export default function Header() {
+
+    let navigate = useNavigate();
+    const [Name, setName] = useState("")
+
     const [bar, setBar] = useState(false)
+    const [myAccount, setMyAccount] = useState(false)
     const [showSearch, setShowSearch] = useState(false)
     const [inputSearch, setInputSearch] = useState(false)
     const [textSearch, setTextSearch] = useState("")
@@ -25,6 +33,31 @@ export default function Header() {
     const Products = useSelector((state) => state.products)
 
     const ProductsSearch = Products.filter((e) => e.name.includes(textSearch))
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            await axios.post("http://localhost:8080/check-user", {},
+                {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+                }).then((res) => {
+                    setName(res.data.data.data.Name)
+
+                }).catch((error) => {
+                    console.log(error)
+                })
+        }
+        fetchUser();
+    }, [])
+
+    const HandleClickLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/", { replace: true });
+        setMyAccount(false);
+    }
+    const HandleClickLogin = () => {
+        navigate("/", { replace: true });
+        setMyAccount(false);
+    }
 
     const HandleClickDetail = () => {
         setShowSearch(false)
@@ -41,7 +74,7 @@ export default function Header() {
                     <ul className='menu dsFlex justify-between box-sizing'>
                         <li
                             className='menu-item box-sizing'
-                        ><Link className='link' to="/">Home</Link></li>
+                        ><Link className='link' to="/Home">Home</Link></li>
                         <li
                             className='menu-item box-sizing'
 
@@ -62,7 +95,25 @@ export default function Header() {
                                 setInputSearch(true)
                             }}
                         > <AiOutlineSearch /> </li>
-                        <li className='box-sizing'> <AiOutlineUser /> </li>
+                        <li className='box-sizing' onClick={() => setMyAccount(!myAccount)}>
+                            <AiOutlineUser />
+                            {
+                                myAccount ?
+                                    Name === "" ?
+                                        <ul className='modal-account'>
+                                            <li onClick={() => HandleClickLogin()}>Login</li>
+                                        </ul>
+                                        :
+                                        <ul className='modal-account'>
+                                            <li>{Name}</li>
+                                            <li onClick={() => HandleClickLogout()}>Logout</li>
+                                        </ul>
+                                    : ""
+                                // <ul className='modal-account'>
+                                //     <li onClick={() => HandleClickLogin()}>Login</li>
+                                // </ul>
+                            }
+                        </li>
                         <li className='box-sizing'> <AiOutlineShoppingCart /> </li>
                     </ul>
                     {bar ?
