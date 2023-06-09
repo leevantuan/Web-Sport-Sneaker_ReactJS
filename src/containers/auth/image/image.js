@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 // import axios from 'axios';
 import axios from '../../../routers/axiosCustom'
 import './image.scss'
+import ReactPaginate from 'react-paginate'
 
 import AuthNavbar from '../../../components/Auth-navbar/Auth-navbar';
 
 import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineSearch } from "react-icons/ai";
 import { toast } from 'react-toastify';
 
 import isLoginAuth from '../isLoginAuth';
@@ -21,11 +23,13 @@ export default function Image() {
     const [showCreate, setShowCreate] = useState(false)
     const [showUpdate, setShowUpdate] = useState(false)
     const [showDelete, setShowDelete] = useState(false)
+    const [showView, setShowView] = useState(false)
 
     const [ImageLinkText, setImageLinkText] = useState("")
     const [ProductIdText, setProductIdText] = useState("")
 
     const [FindId, setFindId] = useState("")
+    const [SearchText, setSearchText] = useState("")
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -36,6 +40,31 @@ export default function Image() {
         }
         fetchPosts();
     }, [loading])
+
+    let SearchImage = [];
+    if (SearchText === "") {
+        SearchImage = image;
+    }
+    else {
+        SearchImage = image.filter((e) => e.ProductId == SearchText);
+    }
+
+    //Pagination
+    const [NumberPage, setNumberPage] = useState(1);
+    const [currentLastPage] = useState(5);
+
+    let totalPage = Math.ceil(SearchImage.length / currentLastPage)
+
+    //Get current
+    const indexOfLastPost = NumberPage * currentLastPage;
+    const indexOfFistPost = indexOfLastPost - currentLastPage;
+    const CurrentImage = SearchImage.slice(indexOfFistPost, indexOfLastPost);
+
+    const handlePageClick = (event) => {
+        setNumberPage(event.selected + 1);
+    }
+
+
     const HandleCreate = async () => {
         setLoading(true)
         await axios.post('/create-a-image', { ImageLink: ImageLinkText, ProductId: ProductIdText });
@@ -87,6 +116,10 @@ export default function Image() {
         setShowDelete(false);
         toast.success(`Delete a category success!`);
     }
+    const HandleClickView = async (event) => {
+        setFindId(event.id);
+        setShowView(true);
+    }
 
     if (check) {
         return (
@@ -97,6 +130,10 @@ export default function Image() {
                         <div className='title-table'>
                             <h2>Image List</h2>
                             <button onClick={() => setShowCreate(true)}>Add new</button>
+                        </div>
+                        <div className='search-auth'>
+                            <input placeholder='Search with product ID ....?' onChange={(e) => setSearchText(e.target.value)} />
+                            <i><AiOutlineSearch /></i>
                         </div>
                         <table className='table-category' >
                             <thead>
@@ -110,12 +147,13 @@ export default function Image() {
                             <tbody>
 
                                 {
-                                    image.map((e) => (
+                                    CurrentImage.map((e) => (
                                         <tr key={e.id}>
                                             <th>{e.id}</th>
                                             <td>{e.ProductId}</td>
                                             <td>{e.ImageLink}</td>
                                             <td>
+                                                <button onClick={() => HandleClickView(e)}>View</button>
                                                 <button onClick={() => HandleClickEdit(e)}>Edit</button>
                                                 <button onClick={() => HandleClickDelete(e)}>Delete</button>
                                             </td>
@@ -126,9 +164,33 @@ export default function Image() {
                             </tbody>
                         </table>
 
+                        <ReactPaginate
+                            breakLabel="..."
+                            nextLabel="next >"
+                            onPageChange={handlePageClick}
+                            pageRangeDisplayed={3}
+                            pageCount={totalPage}
+                            previousLabel="< previous"
+                            renderOnZeroPageCount={null}
+
+                            marginPagesDisplayed={2}
+                            pageClassName="page-item"
+                            pageLinkClassName="page-link"
+                            previousClassName="page-item"
+                            previousLinkClassName="page-link"
+                            nextClassName="page-item"
+                            nextLinkClassName="page-link"
+                            breakClassName="page-item"
+                            breakLinkClassName="page-link"
+                            containerClassName="pagination"
+                            activeClassName="active-paginate"
+                        />
+
                     </div>
 
-                    {/* Create a category */}
+
+
+                    {/* Create a image */}
                     <div className='modal-create-category' hidden={showCreate ? false : true}>
                         <div className='create-category'>
                             <div className='title-create-category'>
@@ -149,7 +211,7 @@ export default function Image() {
                         </div>
                     </div>
 
-                    {/* update a category */}
+                    {/* update a image */}
                     <div className='modal-create-category' hidden={showUpdate ? false : true}>
                         <div className='create-category'>
                             <div className='title-create-category'>
@@ -171,7 +233,7 @@ export default function Image() {
                         </div>
                     </div>
 
-                    {/* delete a category */}
+                    {/* delete a image */}
                     <div className='modal-create-category' hidden={showDelete ? false : true}>
                         <div className='create-category'>
                             <div className='title-create-category'>
@@ -181,6 +243,20 @@ export default function Image() {
                             <div>
                                 <h2>Are you sure delete image with ID: {FindImage.id}?</h2>
                                 <button className='btn-category' onClick={() => HandleDelete()}>Delete</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* view a image */}
+                    <div className='modal-create-category' hidden={showView ? false : true}>
+                        <div className='create-category'>
+                            <div className='title-create-category'>
+                                <h2>Delete a Image</h2>
+                                <i onClick={() => setShowView(false)} ><AiOutlineClose /></i>
+                            </div>
+                            <div>
+                                <img style={{ width: "100%" }} src={FindImage.ImageLink} alt='' />
+                                <button className='btn-category' onClick={() => setShowView(false)}>Close</button>
                             </div>
                         </div>
                     </div>

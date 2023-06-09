@@ -1,6 +1,6 @@
 .product-container {
     width: 800px;
-    margin: 150px auto;
+    margin: 50px auto;
     font-size: 1rem;
     .title-table {
         display: flex;
@@ -28,6 +28,7 @@
         margin-top: 40px;
         width: 100%;
         border: 1px solid grey;
+        border-collapse: collapse;
         > thead > tr > th {
             padding: 0.5rem 0;
             border-bottom: 1px solid black;
@@ -39,6 +40,24 @@
                 box-sizing: border-box;
                 font-size: 1rem;
             }
+        }
+    }
+    > .search-auth {
+        position: relative;
+        width: 400px;
+        margin: auto;
+        > input {
+            width: 100%;
+            font-size: 18px;
+            padding: 8px 16px;
+            box-sizing: border-box;
+        }
+        > i {
+            margin: 0;
+            position: absolute;
+            top: 6px;
+            right: 12px;
+            font-size: 25px;
         }
     }
 }
@@ -174,4 +193,24 @@
             margin-top: 10px;
         }
     }
+}
+//customer paginate
+.active-paginate {
+    // padding: 4px 0;
+    background-color: aqua;
+}
+.page-link {
+    padding: 4px 8px;
+}
+.pagination > li {
+    padding: 0;
+    margin: 0 10px;
+}
+.pagination > li > .page-link {
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 20px;
+    border: 1px solid grey;
+    padding: 2px 8px;
+    transition: all 0.3s ease;
 }

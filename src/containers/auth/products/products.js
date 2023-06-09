@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import axios from '../../../routers/axiosCustom'
+import ReactPaginate from 'react-paginate'
 import './products.scss'
 
 import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineSearch } from "react-icons/ai";
 import { toast } from 'react-toastify';
 
 import AuthNavbar from '../../../components/Auth-navbar/Auth-navbar';
@@ -39,6 +41,7 @@ export default function Product() {
     const Quantity = 1;
 
     const [FindId, setFindId] = useState("")
+    const [SearchText, setSearchText] = useState("")
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -49,6 +52,19 @@ export default function Product() {
         }
         fetchPosts();
     }, [loading])
+
+    let SearchProduct = product.filter((e) => e.Name.includes(SearchText));
+
+    //Pagination
+    const [NumberPage, setNumberPage] = useState(1);
+    const [currentLastPage] = useState(5);
+
+    let totalPage = Math.ceil(SearchProduct.length / currentLastPage)
+
+    //Get current
+    const indexOfLastPost = NumberPage * currentLastPage;
+    const indexOfFistPost = indexOfLastPost - currentLastPage;
+    const CurrentProduct = SearchProduct.slice(indexOfFistPost, indexOfLastPost);
 
     useEffect(() => {
         const fetchCategory = async () => {
@@ -142,6 +158,9 @@ export default function Product() {
         setShowDelete(false);
         toast.success(`Delete a category success!`);
     }
+    const handlePageClick = (event) => {
+        setNumberPage(event.selected + 1);
+    }
 
     if (check) {
         return (
@@ -152,6 +171,10 @@ export default function Product() {
                         <div className='title-table'>
                             <h2>Product List</h2>
                             <button onClick={() => setShowCreate(true)}>Add new</button>
+                        </div>
+                        <div className='search-auth'>
+                            <input placeholder='Search with product name ....?' onChange={(e) => setSearchText(e.target.value)} />
+                            <i><AiOutlineSearch /></i>
                         </div>
                         <table className='table-product' >
                             <thead>
@@ -165,7 +188,7 @@ export default function Product() {
                             <tbody>
 
                                 {
-                                    product.map((e) => (
+                                    CurrentProduct.map((e) => (
                                         <tr key={e.id}>
                                             <th>{e.id}</th>
                                             <td>{e.Name}</td>
@@ -181,6 +204,28 @@ export default function Product() {
 
                             </tbody>
                         </table>
+
+                        <ReactPaginate
+                            breakLabel="..."
+                            nextLabel="next >"
+                            onPageChange={handlePageClick}
+                            pageRangeDisplayed={3}
+                            pageCount={totalPage}
+                            previousLabel="< previous"
+                            renderOnZeroPageCount={null}
+
+                            marginPagesDisplayed={2}
+                            pageClassName="page-item"
+                            pageLinkClassName="page-link"
+                            previousClassName="page-item"
+                            previousLinkClassName="page-link"
+                            nextClassName="page-item"
+                            nextLinkClassName="page-link"
+                            breakClassName="page-item"
+                            breakLinkClassName="page-link"
+                            containerClassName="pagination"
+                            activeClassName="active-paginate"
+                        />
 
                     </div>
 

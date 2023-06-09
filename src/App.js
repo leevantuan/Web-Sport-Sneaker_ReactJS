@@ -16,6 +16,7 @@ import Category from './containers/auth/categories/category';
 import Product from './containers/auth/products/products';
 import Image from './containers/auth/image/image';
 import LoginAuth from './containers/auth/loginAuth/loginAuth';
+import User from './containers/auth/user/user';
 
 import LoginUser from './containers/users/Login/LoginUser';
 // import LogoutUser from './containers/users/Login/Logout';
@@ -47,6 +48,7 @@ function App() {
                     <Route path="/Auth/Category" element={<Category />} />
                     <Route path="/Auth/Product" element={<Product />} />
                     <Route path="/Auth/Image" element={<Image />} />
+                    <Route path="/Auth/User" element={<User />} />
                 </Routes>
 
                 <ToastContainer
