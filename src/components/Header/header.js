@@ -10,7 +10,7 @@ import { AiOutlineShoppingCart } from "react-icons/ai";
 import { FaBars } from "react-icons/fa";
 
 import Item from '../../components/ItemSearch/Item';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -30,9 +30,19 @@ export default function Header() {
     const [textSearch, setTextSearch] = useState("")
     const [list, setList] = useState(false)
 
-    const Products = useSelector((state) => state.products)
+    const [loading, setLoading] = useState(false)
+    const [ListProducts, setListProducts] = useState([]);
 
-    const ProductsSearch = Products.filter((e) => e.name.includes(textSearch))
+    useEffect(() => {
+        setLoading(true);
+        const fetchProduct = async () => {
+            await axios.get('http://localhost:8080/API/products').then((res) => setListProducts(res.data.data)).catch((error) => console.log(error))
+        }
+        setLoading(false)
+        fetchProduct();
+    }, [loading])
+
+    const ProductsSearch = ListProducts.filter((e) => e.Name.includes(textSearch))
 
     useEffect(() => {
         const fetchUser = async () => {

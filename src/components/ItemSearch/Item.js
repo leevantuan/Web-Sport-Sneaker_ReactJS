@@ -11,13 +11,12 @@ export default function Item({ ProductsSearch, HandleClickDetail }) {
                 ProductsSearch.map((props) => (
                     <Link key={props.id} className='list-search-item' to={`/Detail/${props.id}`} onClick={() => HandleClickDetail()} >
                         <div className='left-list-search-item'>
-                            <img src={props.img} alt='' />
+                            <img src={props.Image} alt='' />
                         </div>
                         <div className='right-list-search-item'>
-                            <h3>{props.name}</h3>
-                            <p>{props.category}</p>
+                            <h3>{props.Name}</h3>
                             <span>
-                                <h4>$ {props.price}</h4>
+                                <h4>$ {props.Price}</h4>
                                 <ul>
                                     <li><FaStar /></li>
                                     <li><FaStar /></li>

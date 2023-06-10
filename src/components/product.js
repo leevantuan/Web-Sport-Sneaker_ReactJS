@@ -1,16 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './body.scss'
 import './product.scss'
 
 import { Link } from 'react-router-dom';
 import { FaRegStar } from "react-icons/fa";
+import axios from "../routers/axiosCustom";
 
 export default function Product(props) {
+
+    const [category, setCategory] = useState("");
+
+    useEffect(() => {
+        const fetchCategory = async () => {
+            await axios.get('/categories').then((res) => {
+                const ListCategory = (res.data.data);
+                let Category = ListCategory.find(e => e.id === props.category)
+                setCategory(Category.CategoryName);
+            }
+            ).catch((error) => console.log(error));
+        }
+        fetchCategory();
+    }, [])
+
     return (
         <Link className='item' to={`/Detail/${props.id}`}>
             <img src={props.img} alt='' />
             <h3>{props.name}</h3>
-            <p>{props.category}</p>
+            <p>{category}</p>
             <span>
                 <p>$ {props.price}</p>
                 <ul>

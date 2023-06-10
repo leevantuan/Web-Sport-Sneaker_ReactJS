@@ -61,7 +61,7 @@ $fz28: 28px;
             margin-right: 1rem;
             padding: 0.5rem 1rem;
             transition: all 0.3s ease;
-            &:hover {
+            &:hover:not(.active-size) {
                 background-color: $green-2;
                 transition: all 0.3s ease;
             }
@@ -151,4 +151,7 @@ $fz28: 28px;
             color: $red;
         }
     }
+}
+.active-size {
+    background-color: #0099ff;
 }

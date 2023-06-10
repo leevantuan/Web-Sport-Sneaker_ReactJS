@@ -6,6 +6,7 @@ import { FaRegStar } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 
 export default function Sale(props) {
+
     return (
 
         <Link className='item' to={`/Detail/${props.id}`}>

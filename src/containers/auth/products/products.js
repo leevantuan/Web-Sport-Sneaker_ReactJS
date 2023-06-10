@@ -54,17 +54,18 @@ export default function Product() {
     }, [loading])
 
     let SearchProduct = product.filter((e) => e.Name.includes(SearchText));
-
+    //sort
+    let Products = [...SearchProduct].sort((a, b) => b.id - a.id);
     //Pagination
     const [NumberPage, setNumberPage] = useState(1);
-    const [currentLastPage] = useState(5);
+    const [currentLastPage] = useState(10);
 
-    let totalPage = Math.ceil(SearchProduct.length / currentLastPage)
+    let totalPage = Math.ceil(Products.length / currentLastPage)
 
     //Get current
     const indexOfLastPost = NumberPage * currentLastPage;
     const indexOfFistPost = indexOfLastPost - currentLastPage;
-    const CurrentProduct = SearchProduct.slice(indexOfFistPost, indexOfLastPost);
+    const CurrentProduct = Products.slice(indexOfFistPost, indexOfLastPost);
 
     useEffect(() => {
         const fetchCategory = async () => {
@@ -146,6 +147,8 @@ export default function Product() {
         setLoading(true);
 
         setShowUpdate(false);
+        setNewText(0);
+        setSaleText(0);
         toast.success("Update a product success!")
     }
 

@@ -24,7 +24,7 @@ main {
     .left-container {
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: 100px 400px 350px 50px;
+        grid-template-rows: 100px 400px 450px 50px;
         > .sort {
             > select {
                 cursor: pointer;
@@ -155,4 +155,50 @@ main {
 }
 .right-container {
     grid-area: b;
+}
+.page-products {
+    width: 500px;
+    margin: 50px auto;
+}
+//customer paginate
+.active-paginate {
+    // padding: 4px 0;
+    background-color: aqua;
+}
+.page-link {
+    padding: 4px 8px;
+}
+.pagination > li {
+    padding: 0;
+    margin: 0 10px;
+}
+.pagination > li > .page-link {
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 20px;
+    border: 1px solid grey;
+    padding: 2px 8px;
+    transition: all 0.3s ease;
+}
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    list-style: none;
+    > li {
+        padding: 0 1rem;
+        > .page-link {
+            text-decoration: none;
+            font-size: 24px;
+            border: 1px solid grey;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+            &:hover {
+                transition: all 0.3s ease;
+                background-color: greenyellow;
+            }
+        }
+    }
+}
+.active {
+    background-color: greenyellow;
 }

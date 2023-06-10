@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../../components/body.scss'
 import './Home.scss'
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 
 import { FaRegHandPointRight } from "react-icons/fa";
 import { FaShippingFast } from "react-icons/fa";
@@ -18,11 +18,24 @@ import BestSale from '../../../components/BestSale/bestSale';
 
 import Header from '../../../components/Header/header';
 import Footer from '../../../components/Footer/footer';
+import axios from '../../../routers/axiosCustom';
 
 export default function Home() {
 
-    const Products = useSelector((state) => state.products)
-    const ProductsSale = Products.filter((e) => e.sale === true)
+    const [loading, setLoading] = useState(false)
+    const [ListProducts, setListProducts] = useState([]);
+
+    useEffect(() => {
+        setLoading(true);
+        const fetchProduct = async () => {
+            await axios.get('/products').then((res) => setListProducts(res.data.data)).catch((error) => console.log(error))
+        }
+        setLoading(false)
+        fetchProduct();
+    }, [loading])
+
+    // const Products = useSelector((state) => state.products)
+    const ProductsSale = ListProducts.filter((e) => e.Sale === 1)
 
     return (
         <div className='container'>
@@ -65,7 +78,7 @@ export default function Home() {
                         <div className='product-sale' data-aos="fade-up-left" data-aos-duration="1000">
                             {ProductsSale.map((e) => {
                                 return (
-                                    <Sale key={e.id} img={e.img} name={e.name} price={e.price} id={e.id} />
+                                    <Sale key={e.id} img={e.Image} name={e.Name} price={e.Price} id={e.id} />
                                 )
                             })}
                         </div>

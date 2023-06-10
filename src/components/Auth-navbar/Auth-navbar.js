@@ -41,6 +41,7 @@ export default function AuthNavbar() {
                         <li><Link className="link-auth-navbar" to="/Auth/Category">Category</Link></li>
                         <li><Link className="link-auth-navbar" to="/Auth/Image">Image</Link></li>
                         <li><Link className="link-auth-navbar" to="/Auth/User">User</Link></li>
+                        <li><Link className="link-auth-navbar" to="/Auth/Cart">Cart</Link></li>
                         <li><Link className="link-auth-navbar" to="/Auth/User">Order</Link></li>
                         <li><span className="link-auth-navbar active-auth" onClick={() => HandleClickLogout()}>Logout</span></li>
                     </ul>

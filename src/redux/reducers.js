@@ -1,7 +1,7 @@
-import data from "../data/data";
+
 
 const initState = {
-    products: data,
+    products: [],
     search: "",
     cart: [],
     favorite: [],

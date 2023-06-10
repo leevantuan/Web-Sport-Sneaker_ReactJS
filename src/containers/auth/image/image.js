@@ -48,17 +48,19 @@ export default function Image() {
     else {
         SearchImage = image.filter((e) => e.ProductId == SearchText);
     }
-
+    //sort
+    let Images = [...SearchImage].sort((a, b) => b.id - a.id);
     //Pagination
     const [NumberPage, setNumberPage] = useState(1);
-    const [currentLastPage] = useState(5);
+    const [currentLastPage] = useState(12);
 
-    let totalPage = Math.ceil(SearchImage.length / currentLastPage)
+    let totalPage = Math.ceil(Images.length / currentLastPage)
 
     //Get current
     const indexOfLastPost = NumberPage * currentLastPage;
     const indexOfFistPost = indexOfLastPost - currentLastPage;
-    const CurrentImage = SearchImage.slice(indexOfFistPost, indexOfLastPost);
+    const CurrentImage = Images.slice(indexOfFistPost, indexOfLastPost);
+
 
     const handlePageClick = (event) => {
         setNumberPage(event.selected + 1);

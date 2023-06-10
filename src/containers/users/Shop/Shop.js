@@ -1,29 +1,50 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./Shop.scss";
 import "../../../components/body.scss"
 
 import Product from '../../../components/product';
-import Pagination from '../../../components/Pagination/Pagination';
+// import Pagination from '../../../components/Pagination/Pagination';
 
 import Header from '../../../components/Header/header';
 import Footer from '../../../components/Footer/footer';
 
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
+import axios from '../../../routers/axiosCustom';
+import ReactPaginate from 'react-paginate'
 
 export default function Shop() {
 
-    const Products = useSelector((state) => state.products)
-
-    const [ProductCategory, setProductCategory] = useState("");
+    const [loading, setLoading] = useState(false)
+    const [ListProducts, setListProducts] = useState([]);
+    const [ListCategories, setListCategories] = useState([]);
+    const [ProductCategory, setProductCategory] = useState();
     const [PriceFrom, setPriceFrom] = useState(0);
-    const [PriceTo, setPriceTo] = useState(1000);
+    const [PriceTo, setPriceTo] = useState(99999);
+
+    useEffect(() => {
+        setLoading(true);
+        const fetchProduct = async () => {
+            await axios.get('/products').then((res) => setListProducts(res.data.data)).catch((error) => console.log(error))
+        }
+        setLoading(false)
+        fetchProduct();
+    }, [loading])
+
+    useEffect(() => {
+        setLoading(true);
+        const fetchCategory = async () => {
+            await axios.get('/categories').then((res) => setListCategories(res.data.data)).catch((error) => console.log(error))
+        }
+        setLoading(false)
+        fetchCategory();
+    }, [loading])
 
     //Filter Products
     const HandleChange = (data) => {
         switch (data) {
             case 'All':
                 setPriceFrom(0);
-                setPriceTo(1000)
+                setPriceTo(99999)
                 break;
             case 'Price-1':
                 setPriceFrom(0);
@@ -31,38 +52,27 @@ export default function Shop() {
                 break;
             case 'Price-2':
                 setPriceFrom(200);
-                setPriceTo(251)
+                setPriceTo(501)
                 break;
             case 'Price-3':
-                setPriceFrom(250);
-                setPriceTo(301)
+                setPriceFrom(500);
+                setPriceTo(1001)
                 break;
             case 'Price-4':
-                setPriceFrom(300);
-                setPriceTo(351)
+                setPriceFrom(1000);
+                setPriceTo(99999)
                 break;
-            case 'Price-5':
-                setPriceFrom(351);
-                setPriceTo(1000)
-                break;
-            case 'Category':
-                setProductCategory("")
-                return setProductCategory;
-            case 'Jordan 1 Mid 2023':
-                setProductCategory("Jordan 1 Mid 2023")
-                return setProductCategory;
-            case 'Jordan 1 High 2023':
-                setProductCategory("Jordan 1 High 2023")
-                return setProductCategory;
-            case 'Jordan 1 Zoom 2023':
-                setProductCategory("Jordan 1 Zoom 2023")
-                return setProductCategory;
             default:
-                return Products;
+                return ListProducts;
         }
     }
 
-    const ProductItems = Products.filter((state) => state.price > PriceFrom && state.price < PriceTo && state.category.includes(ProductCategory));
+    const ProductItems = ListProducts.filter((state) => {
+        if (ProductCategory) {
+            return state.Price > PriceFrom && state.Price < PriceTo && state.CategoryId == ProductCategory
+        }
+        return state.Price > PriceFrom && state.Price < PriceTo
+    });
 
     //Sort Products
     const options = [
@@ -80,10 +90,10 @@ export default function Shop() {
     }
 
     if (sort === "Price Low - Hight") {
-        ProductSort = [...ProductItems].sort((a, b) => a.price - b.price);
+        ProductSort = [...ProductItems].sort((a, b) => a.Price - b.Price);
     }
     else if (sort === "Price Hight - Low") {
-        ProductSort = [...ProductItems].sort((a, b) => b.price - a.price);
+        ProductSort = [...ProductItems].sort((a, b) => b.Price - a.Price);
     } else {
         ProductSort = ProductItems;
     }
@@ -94,17 +104,20 @@ export default function Shop() {
     }
 
     //Pagination
-
-    const [currentFistPage, setCurrentFistPage] = useState(1);
+    const [NumberPage, setNumberPage] = useState(1);
     const [currentLastPage] = useState(12);
 
-    //Get current
-    const indexOfLastPost = currentFistPage * currentLastPage;
-    const indexOfFistPost = indexOfLastPost - currentLastPage;
-    const CurrentPost = ProductSort.slice(indexOfFistPost, indexOfLastPost);
+    let totalPage = Math.ceil(ProductSort.length / currentLastPage)
 
-    //Page number
-    const paginate = (number) => { setCurrentFistPage(number) };
+    //Get current
+    const indexOfLastPost = NumberPage * currentLastPage;
+    const indexOfFistPost = indexOfLastPost - currentLastPage;
+    const CurrentProducts = ProductSort.slice(indexOfFistPost, indexOfLastPost);
+
+
+    const handlePageClick = (event) => {
+        setNumberPage(event.selected + 1);
+    }
 
     return (
         <div className='container'>
@@ -133,52 +146,71 @@ export default function Shop() {
                             </div>
                             <div>
                                 <input type='radio' name='Price' value={"Price-2"} onChange={() => HandleChange("Price-2")} />
-                                <p>From $ 201 to $ 250</p>
+                                <p>From $ 201 to $ 500</p>
                             </div>
                             <div>
                                 <input type='radio' name='Price' value={"Price-3"} onChange={() => HandleChange("Price-3")} />
-                                <p>From $ 251 to $ 300</p>
+                                <p>From $ 501 to $ 1000</p>
                             </div>
                             <div>
-                                <input type='radio' name='Price' value={"Price-4"} onChange={() => HandleChange("Price-4")} />
-                                <p>From $ 301 to $ 350</p>
-                            </div>
-                            <div>
-                                <input type='radio' name='Price' value={"Price-5"} onChange={() => HandleChange("Price-5")} />
-                                <p>From $ 351 and up</p>
+                                <input type='radio' name='Price' value={"Price-5"} onChange={() => HandleChange("Price-4")} />
+                                <p>From $ 1001 and up</p>
                             </div>
                         </div>
                         <div className='category'>
                             <h2>Category</h2>
                             <div>
-                                <input type='radio' name='Category' value={"All"} onChange={() => HandleChange("Category")} />
+                                <input type='radio' name='Category' value={""} onChange={() => setProductCategory("")} />
                                 <p>All</p>
                             </div>
-                            <div>
-                                <input type='radio' name='Category' value={"Jordan 1 Mid 2023"} onChange={() => HandleChange("Jordan 1 Mid 2023")} />
-                                <p>Jordan 1 Mid 2023</p>
-                            </div>
-                            <div>
-                                <input type='radio' name='Category' value={"Jordan 1 High 2023"} onChange={() => HandleChange("Jordan 1 High 2023")} />
-                                <p>Jordan 1 High 2023</p>
-                            </div>
-                            <div>
-                                <input type='radio' name='Category' value={"Jordan 1 Zoom 2023"} onChange={() => HandleChange("Jordan 1 Zoom 2023")} />
-                                <p>Jordan 1 Zoom 2023</p>
-                            </div>
+                            {
+                                ListCategories.map((e) => {
+                                    return (
+                                        <div key={e.id}>
+                                            <input type='radio' name='Category' value={e.id} onChange={(e) => setProductCategory(e.target.value)} />
+                                            <p>{e.CategoryName}</p>
+                                        </div>
+                                    )
+                                })
+                            }
+
                         </div>
                         <div className='remove-filter' onClick={RemoveFilter}>
                             <p>REMOVE FILTER</p>
                         </div>
                     </div>
                     <div className='right-container'>
-                        {CurrentPost.map((e) => {
+                        {CurrentProducts.map((e) => {
                             return (
-                                <Product key={e.id} img={e.img} name={e.name} price={e.price} category={e.category} id={e.id} />
+                                <Product key={e.id} img={e.Image} name={e.Name} price={e.Price} category={e.CategoryId} id={e.id} />
                             )
                         })}
-                        <Pagination currentLastPage={currentLastPage} totalPage={ProductSort.length} paginate={paginate} />
+
                     </div>
+
+                </div>
+                <div className='page-products'>
+                    <ReactPaginate
+                        breakLabel="..."
+                        nextLabel="next >"
+                        onPageChange={handlePageClick}
+                        pageRangeDisplayed={3}
+                        pageCount={totalPage}
+                        previousLabel="< previous"
+                        renderOnZeroPageCount={null}
+
+                        marginPagesDisplayed={2}
+                        pageClassName="page-item"
+                        pageLinkClassName="page-link"
+                        previousClassName="page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="page-item"
+                        nextLinkClassName="page-link"
+                        breakClassName="page-item"
+                        breakLinkClassName="page-link"
+                        containerClassName="pagination"
+                        activeClassName="active-paginate"
+                    />
                 </div>
             </main>
             <Footer />
