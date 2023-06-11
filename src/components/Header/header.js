@@ -7,12 +7,13 @@ import { Link } from 'react-router-dom';
 import { AiOutlineUser } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { FaBars } from "react-icons/fa";
 
 import Item from '../../components/ItemSearch/Item';
 // import { useSelector } from 'react-redux';
 
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import axios from 'axios';
@@ -22,17 +23,21 @@ export default function Header() {
 
     let navigate = useNavigate();
     const [Name, setName] = useState("")
+    const [Phone, setPhone] = useState("")
 
     const [bar, setBar] = useState(false)
     const [myAccount, setMyAccount] = useState(false)
     const [showSearch, setShowSearch] = useState(false)
+    const [showCart, setShowCart] = useState(false)
     const [inputSearch, setInputSearch] = useState(false)
     const [textSearch, setTextSearch] = useState("")
     const [list, setList] = useState(false)
 
     const [loading, setLoading] = useState(false)
     const [ListProducts, setListProducts] = useState([]);
+    const [ListCarts, setListCarts] = useState([]);
 
+    //list product
     useEffect(() => {
         setLoading(true);
         const fetchProduct = async () => {
@@ -44,6 +49,17 @@ export default function Header() {
 
     const ProductsSearch = ListProducts.filter((e) => e.Name.includes(textSearch))
 
+    //list cart
+    useEffect(() => {
+        setLoading(true);
+        const fetchCart = async () => {
+            await axios.get('http://localhost:8080/API/carts').then((res) => setListCarts(res.data.data)).catch((error) => console.log(error))
+        }
+        setLoading(false)
+        fetchCart();
+    }, [loading])
+
+    //user check
     useEffect(() => {
         const fetchUser = async () => {
             await axios.post("http://localhost:8080/check-user", {},
@@ -51,13 +67,42 @@ export default function Header() {
                     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                 }).then((res) => {
                     setName(res.data.data.data.Name)
-
+                    setPhone(res.data.data.data.Phone)
                 }).catch((error) => {
                     console.log(error)
                 })
         }
         fetchUser();
     }, [])
+
+    //filter cart with user phone number
+    const [ProductsCart, setProductsCart] = useState([]);
+    const [TotalCart, setTotalCart] = useState(0);
+    const [CountCart, setCountCart] = useState(0);
+
+    useEffect(() => {
+        let List = ListCarts.filter((cart) => cart.Phone === Phone)
+
+        let ListProductID = List.map((id) => id.ProductID)
+
+        setProductsCart(ListProductID.map((event) => ListProducts.find((item) => item.id === event)));
+        setCountCart(ProductsCart.length)
+
+        //Total cart
+        let ListPriceCart = ProductsCart.map((event) => event.Price)
+
+        let TotalCart = 0;
+        for (var i = 0; i < ListPriceCart.length; i++) {
+            let Price = ListPriceCart[i];
+            TotalCart = TotalCart + Price;
+        }
+
+        setTotalCart(TotalCart)
+    }, [loading])
+
+    console.log(CountCart)
+
+
 
     const HandleClickLogout = () => {
         localStorage.removeItem("token");
@@ -73,6 +118,20 @@ export default function Header() {
         setShowSearch(false)
         setInputSearch(false)
     }
+
+    const HandleDeleteACart = async (event) => {
+
+        let List = ListCarts.filter((cart) => cart.Phone === Phone)
+
+        let ProductRemove = List.find((e) => e.ProductID === event)
+
+        setLoading(true)
+        await axios.delete('http://localhost:8080/API/create-a-cart', { data: { id: ProductRemove.id } });
+        setLoading(false)
+
+        toast.success(`Delete success!`);
+    }
+
     return (
         <>
             <nav>
@@ -105,7 +164,10 @@ export default function Header() {
                                 setInputSearch(true)
                             }}
                         > <AiOutlineSearch /> </li>
-                        <li className='box-sizing' onClick={() => setMyAccount(!myAccount)}>
+                        <li className='box-sizing' onClick={() => {
+                            setMyAccount(!myAccount)
+                            setShowCart(false)
+                        }}>
                             <AiOutlineUser />
                             {
                                 myAccount ?
@@ -124,7 +186,41 @@ export default function Header() {
                                 // </ul>
                             }
                         </li>
-                        <li className='box-sizing'> <AiOutlineShoppingCart /> </li>
+                        <li className='box-sizing' onClick={() => {
+                            setLoading(!loading);
+                            setShowCart(!showCart);
+                            setMyAccount(false);
+                        }}>
+                            <AiOutlineShoppingCart />
+                            {
+                                showCart ?
+                                    <ul className='my-cart'>
+                                        {
+                                            ProductsCart.map((e) => {
+                                                return (
+                                                    <li key={e.id}>
+                                                        <img src={e.Image} alt='' />
+                                                        <span>
+                                                            <h3>{e.Name}</h3>
+                                                            <div>
+                                                                <h4>$ {e.Price}</h4>
+                                                                <i onClick={() => HandleDeleteACart(e.id)}><FaRegTrashAlt /></i>
+                                                            </div>
+                                                        </span>
+                                                    </li>
+                                                )
+                                            })
+                                        }
+
+                                        <div className='view-cart-link'>
+                                            <Link to="">View cart</Link>
+                                            <p>Total: $ {TotalCart}</p>
+                                        </div>
+                                    </ul> :
+                                    ""
+                            }
+
+                        </li>
                     </ul>
                     {bar ?
                         <div className='tab-bar' onClick={() => setBar(!bar)}>

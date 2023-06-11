@@ -21,7 +21,7 @@ export default function Detail() {
     const [ListProducts, setListProducts] = useState([]);
     const [ListImages, setListImages] = useState([]);
 
-    const [UserID, setUserID] = useState("");
+    const [Phone, setPhone] = useState("");
     const [size, setSize] = useState(38);
 
 
@@ -51,7 +51,7 @@ export default function Detail() {
                 }).then((res) => {
                     if (res) {
                         setISLogin(true);
-                        setUserID(res.data.data.data.id)
+                        setPhone(res.data.data.data.Phone)
                     }
 
                 }).catch((error) => {
@@ -82,7 +82,7 @@ export default function Detail() {
 
     const HandleAddToCart = async () => {
         setLoading(true)
-        await axios.post('http://localhost:8080/API/create-a-cart', { UserID: UserID, ProductID: id, Size: size }).then((res) => {
+        await axios.post('http://localhost:8080/API/create-a-cart', { Phone: Phone, ProductID: id, Size: size }).then((res) => {
             if (res.data.message) {
                 toast.error(res.data.message)
             }

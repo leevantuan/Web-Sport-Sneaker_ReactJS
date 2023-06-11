@@ -66,10 +66,6 @@ nav {
         padding: 0 0.75rem;
         cursor: pointer;
         transition: 0.5s ease;
-        &:hover {
-            color: $green;
-            transition: 0.5s ease;
-        }
     }
 }
 //footer ----
@@ -155,6 +151,80 @@ nav {
             transition: all 0.2s ease;
             color: #fff;
             background-color: gray;
+        }
+    }
+}
+//my cart
+.box-sizing {
+    position: relative;
+    .my-cart {
+        position: absolute;
+        right: 0;
+        padding: 0 20px;
+        width: 350px;
+        min-height: 50px;
+        border-radius: 4px;
+        box-shadow: 0px 2px 11px 3px rgba(163, 163, 163, 0.75);
+        -webkit-box-shadow: 0px 2px 11px 3px rgba(163, 163, 163, 0.75);
+        -moz-box-shadow: 0px 2px 11px 3px rgba(163, 163, 163, 0.75);
+        transition: all 0.3s ease;
+        background-color: #fff;
+        > li {
+            display: flex;
+            padding: 10px 0;
+            height: 80px;
+            border-bottom: 0.2px solid grey;
+            transition: all 0.3s ease;
+            > img {
+                width: 120px;
+                height: 80px;
+                transition: all 0.3s ease;
+            }
+            > span {
+                width: 210px;
+                margin-left: 20px;
+                > h3 {
+                    font-size: 16px;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+                > div {
+                    margin: 0;
+                    font-size: 16px;
+                    color: red;
+                    display: flex;
+                    justify-content: space-between;
+                    > h4 {
+                        margin: 0;
+                    }
+                    > i {
+                        font-size: 20px;
+                        margin-right: 10px;
+                        transition: all 0.2s ease;
+                        padding: 4px;
+                        &:hover {
+                            font-size: 24px;
+                            transition: all 0.2s ease;
+                        }
+                    }
+                }
+            }
+            &:hover {
+                > img {
+                    transform: rotate(10deg);
+                }
+            }
+        }
+        .view-cart-link {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            padding: 8px 0;
+            > p {
+                margin: 0;
+            }
         }
     }
 }

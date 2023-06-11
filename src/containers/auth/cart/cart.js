@@ -45,7 +45,7 @@ export default function Cart() {
 
     //Pagination
     const [NumberPage, setNumberPage] = useState(1);
-    const [currentLastPage] = useState(5);
+    const [currentLastPage] = useState(12);
 
     let totalPage = Math.ceil(SearchCart.length / currentLastPage)
 
@@ -95,7 +95,7 @@ export default function Cart() {
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>USER ID</th>
+                                    <th>USER PHONE NUMBER</th>
                                     <th>PRODUCT ID</th>
                                     <th>ACTIONS</th>
                                 </tr>
@@ -106,7 +106,7 @@ export default function Cart() {
                                     CurrentCart.map((e) => (
                                         <tr key={e.id}>
                                             <th>{e.id}</th>
-                                            <td>{e.UserID}</td>
+                                            <td>{e.Phone}</td>
                                             <td>{e.ProductID}</td>
                                             <td>
                                                 <button onClick={() => HandleClickDelete(e)}>Delete</button>
@@ -150,7 +150,7 @@ export default function Cart() {
                                 <i onClick={() => setShowDelete(false)} ><AiOutlineClose /></i>
                             </div>
                             <div>
-                                <h2>Are you sure delete product in the cart with User ID: {FindCart.UserID}?</h2>
+                                <h2>Are you sure delete product in the cart with User Phone number: {FindCart.Phone}?</h2>
                                 <button className='btn-category' onClick={() => HandleDelete()}>Delete</button>
                             </div>
                         </div>
