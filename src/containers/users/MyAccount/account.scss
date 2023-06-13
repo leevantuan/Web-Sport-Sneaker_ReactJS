@@ -1,0 +1,25 @@
+.container-myAccount {
+    width: 600px;
+    margin: 120px auto;
+    .my-account-setting {
+        padding: 8px 32px;
+        box-sizing: border-box;
+        font-size: 18px;
+        > input {
+            width: 90%;
+            padding: 8px 16px;
+            box-sizing: border-box;
+            margin: 4px 0 16px;
+        }
+        > button {
+            margin: 8px 0;
+            font-size: 16px;
+            padding: 8px 16px;
+        }
+    }
+}
+.table-order {
+    width: 100%;
+    border: 1px solid grey;
+    border-collapse: collapse;
+}

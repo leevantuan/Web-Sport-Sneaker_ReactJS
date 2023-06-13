@@ -19,9 +19,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
-export default function Header() {
+export default function Header(props) {
 
     let navigate = useNavigate();
+
     const [Name, setName] = useState("")
     const [Phone, setPhone] = useState("")
 
@@ -81,28 +82,29 @@ export default function Header() {
     const [CountCart, setCountCart] = useState(0);
 
     useEffect(() => {
-        let List = ListCarts.filter((cart) => cart.Phone === Phone)
+        const List = ListCarts.filter((cart) => cart.Phone === Phone && cart.Status === 1)
 
-        let ListProductID = List.map((id) => id.ProductID)
+        const ListProductID = List.map((id) => id.ProductID)
 
         setProductsCart(ListProductID.map((event) => ListProducts.find((item) => item.id === event)));
-        setCountCart(ProductsCart.length)
+    }, [ListCarts, ListProducts, Phone])
 
+    useEffect(() => {
+        setLoading(true);
         //Total cart
-        let ListPriceCart = ProductsCart.map((event) => event.Price)
-
-        let TotalCart = 0;
-        for (var i = 0; i < ListPriceCart.length; i++) {
-            let Price = ListPriceCart[i];
-            TotalCart = TotalCart + Price;
+        const ListPriceCart = ProductsCart.map((event) => event.Price)
+        if (ListPriceCart) {
+            let TotalCart = 0;
+            for (var i = 0; i < ListPriceCart.length; i++) {
+                let Price = ListPriceCart[i];
+                TotalCart = TotalCart + Price;
+            }
+            setCountCart(ProductsCart.length)
+            setTotalCart(TotalCart)
+            setLoading(false);
         }
-
-        setTotalCart(TotalCart)
-    }, [loading])
-
-    console.log(CountCart)
-
-
+        setLoading(false);
+    }, [loading, ProductsCart])
 
     const HandleClickLogout = () => {
         localStorage.removeItem("token");
@@ -111,6 +113,10 @@ export default function Header() {
     }
     const HandleClickLogin = () => {
         navigate("/", { replace: true });
+        setMyAccount(false);
+    }
+    const HandleClickMyAccount = () => {
+        navigate("/Account", { replace: true });
         setMyAccount(false);
     }
 
@@ -177,13 +183,10 @@ export default function Header() {
                                         </ul>
                                         :
                                         <ul className='modal-account'>
-                                            <li>{Name}</li>
+                                            <li onClick={() => HandleClickMyAccount()}>{Name}</li>
                                             <li onClick={() => HandleClickLogout()}>Logout</li>
                                         </ul>
                                     : ""
-                                // <ul className='modal-account'>
-                                //     <li onClick={() => HandleClickLogin()}>Login</li>
-                                // </ul>
                             }
                         </li>
                         <li className='box-sizing' onClick={() => {
@@ -192,6 +195,7 @@ export default function Header() {
                             setMyAccount(false);
                         }}>
                             <AiOutlineShoppingCart />
+                            <span>{CountCart}</span>
                             {
                                 showCart ?
                                     <ul className='my-cart'>
@@ -213,7 +217,7 @@ export default function Header() {
                                         }
 
                                         <div className='view-cart-link'>
-                                            <Link to="">View cart</Link>
+                                            <Link to="/ViewCart">View cart</Link>
                                             <p>Total: $ {TotalCart}</p>
                                         </div>
                                     </ul> :

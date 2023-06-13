@@ -1,0 +1,61 @@
+.container-ViewCart {
+    width: 1000px;
+    margin: 120px auto;
+    font-size: 18px;
+    > table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+        > tbody > tr > td:nth-child(1) {
+            > img {
+                width: 200px;
+                height: 120px;
+            }
+        }
+        > tbody > tr > td:nth-child(5) {
+            width: 120px;
+            > button {
+                margin: 0 8px;
+                cursor: pointer;
+            }
+        }
+        > tbody > tr > td:nth-child(6) {
+            > button {
+                cursor: pointer;
+            }
+        }
+    }
+    > h2 {
+        color: red;
+    }
+    > button {
+        font-size: 18px;
+        padding: 8px 16px;
+        cursor: pointer;
+    }
+}
+table,
+td,
+th {
+    border-bottom: 1px solid black;
+    text-align: center;
+    padding: 8px 16px;
+}
+.check-out {
+    width: 600px;
+    margin: auto;
+    font-size: 18px;
+    > input {
+        width: 100%;
+        font-size: 18px;
+        padding: 8px 16px;
+        box-sizing: border-box;
+        margin-top: 5px;
+    }
+    > button {
+        margin-top: 20px;
+        font-size: 20px;
+        padding: 8px 16px;
+        cursor: pointer;
+    }
+}

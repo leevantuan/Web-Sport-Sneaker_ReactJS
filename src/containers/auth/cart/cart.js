@@ -97,6 +97,8 @@ export default function Cart() {
                                     <th>ID</th>
                                     <th>USER PHONE NUMBER</th>
                                     <th>PRODUCT ID</th>
+                                    <th>QUANTITY</th>
+                                    <th>STATUS</th>
                                     <th>ACTIONS</th>
                                 </tr>
                             </thead>
@@ -108,6 +110,8 @@ export default function Cart() {
                                             <th>{e.id}</th>
                                             <td>{e.Phone}</td>
                                             <td>{e.ProductID}</td>
+                                            <td>{e.Quantity}</td>
+                                            <td>{e.Status === 1 ? "on" : "off"}</td>
                                             <td>
                                                 <button onClick={() => HandleClickDelete(e)}>Delete</button>
                                             </td>

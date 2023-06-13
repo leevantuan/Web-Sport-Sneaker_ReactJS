@@ -14,6 +14,7 @@ import Header from '../../../components/Header/header';
 import Footer from '../../../components/Footer/footer';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 export default function Detail() {
     const [loading, setLoading] = useState(false)
@@ -24,6 +25,7 @@ export default function Detail() {
     const [Phone, setPhone] = useState("");
     const [size, setSize] = useState(38);
 
+    let navigate = useNavigate();
 
     useEffect(() => {
         setLoading(true);
@@ -82,7 +84,7 @@ export default function Detail() {
 
     const HandleAddToCart = async () => {
         setLoading(true)
-        await axios.post('http://localhost:8080/API/create-a-cart', { Phone: Phone, ProductID: id, Size: size }).then((res) => {
+        await axios.post('http://localhost:8080/API/create-a-cart', { Phone: Phone, ProductID: id, Size: size, Quantity: 1, Status: 1 }).then((res) => {
             if (res.data.message) {
                 toast.error(res.data.message)
             }
@@ -91,6 +93,7 @@ export default function Detail() {
             }
         })
         setLoading(false)
+        navigate("/Shop", { replace: true });
     }
 
     if (isLogin === true) {
