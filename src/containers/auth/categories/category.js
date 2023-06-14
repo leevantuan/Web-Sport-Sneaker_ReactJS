@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
-import axios from '../../../routers/axiosCustom'
+import { Link } from 'react-router-dom';
+import ReactPaginate from 'react-paginate';
+import axios from 'axios';
 import './category.scss'
-import ReactPaginate from 'react-paginate'
 
 import AuthNavbar from '../../../components/Auth-navbar/Auth-navbar';
+import isLoginAuth from '../isLoginAuth';
 
 import { AiOutlineClose } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { toast } from 'react-toastify';
-
-import isLoginAuth from '../isLoginAuth';
-import { Link } from 'react-router-dom';
+//API
+import { GetCategory, PPD_Category } from "../../../routers/API";
 
 export default function Category() {
 
@@ -26,14 +26,14 @@ export default function Category() {
 
     const [CategoryText, setCategoryText] = useState("")
     const [MadeInText, setMadeInText] = useState("")
-
     const [FindId, setFindId] = useState("")
     const [SearchText, setSearchText] = useState("")
 
+    //API Category
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
-            const res = await axios.get('/categories');
+            const res = await axios.get(GetCategory);
             setCategory(res.data.data);
             setLoading(false);
         }
@@ -42,24 +42,21 @@ export default function Category() {
 
     let SearchCategory = category.filter((e) => e.CategoryName.includes(SearchText));
 
-    //Pagination
+    //Paginate
     const [NumberPage, setNumberPage] = useState(1);
     const [currentLastPage] = useState(5);
-
     let totalPage = Math.ceil(SearchCategory.length / currentLastPage)
-
-    //Get current
     const indexOfLastPost = NumberPage * currentLastPage;
     const indexOfFistPost = indexOfLastPost - currentLastPage;
     const CurrentCategory = SearchCategory.slice(indexOfFistPost, indexOfLastPost);
-
     const handlePageClick = (event) => {
         setNumberPage(event.selected + 1);
     }
 
+    //API Create Category
     const HandleCreate = async () => {
         setLoading(true)
-        await axios.post('/create-a-category', { CategoryName: CategoryText, MadeIn: MadeInText });
+        await axios.post(PPD_Category, { CategoryName: CategoryText, MadeIn: MadeInText });
         setLoading(false)
 
         setShowCreate(false);
@@ -67,12 +64,10 @@ export default function Category() {
         setMadeInText("");
         toast.success("Create a category success!")
     }
-
     let FindCategory = []
     if (FindId !== "") {
         FindCategory = category.find((e) => e.id === FindId)
     }
-
     const HandleClickEdit = (event) => {
         setFindId(event.id);
         setShowUpdate(true);
@@ -82,15 +77,13 @@ export default function Category() {
             setMadeInText(event.MadeIn);
         }
     }
-
     const HandleClickDelete = (event) => {
         setFindId(event.id);
         setShowDelete(true);
     }
-
     const HandleUpdate = async (FindCategory) => {
         setLoading(true)
-        await axios.put('/create-a-category', { CategoryName: CategoryText, MadeIn: MadeInText, id: FindId });
+        await axios.put(PPD_Category, { CategoryName: CategoryText, MadeIn: MadeInText, id: FindId });
         setLoading(false)
 
         setShowUpdate(false);
@@ -99,10 +92,9 @@ export default function Category() {
         toast.success(`Update with ID ${FindCategory.id} success!`);
 
     }
-
     const HandleDelete = async () => {
         setLoading(true)
-        await axios.delete('/create-a-category', { data: { id: FindId } });
+        await axios.delete(PPD_Category, { data: { id: FindId } });
         setLoading(false)
 
         setFindId("");

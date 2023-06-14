@@ -1,53 +1,56 @@
-import React, { useEffect, useState } from 'react'
-import "./Detail.scss"
-import "../../../components/body.scss"
+import React, { useEffect, useState } from 'react';
+import "./Detail.scss";
+import "../../../components/body.scss";
 
 import { Link, useParams } from 'react-router-dom';
-// import { useSelector } from 'react-redux';
-
 import { FaStar } from "react-icons/fa";
 import { FaSyncAlt } from "react-icons/fa";
 import { FaShieldAlt } from "react-icons/fa";
 import { FaShippingFast } from "react-icons/fa";
+import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 import Header from '../../../components/Header/header';
 import Footer from '../../../components/Footer/footer';
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import { useNavigate } from "react-router-dom";
+
+import { GetProduct, GetImage, Check_Login_Users, PPD_Cart } from "../../../routers/API";
 
 export default function Detail() {
     const [loading, setLoading] = useState(false)
     const [isLogin, setISLogin] = useState(false)
     const [ListProducts, setListProducts] = useState([]);
     const [ListImages, setListImages] = useState([]);
-
     const [Phone, setPhone] = useState("");
     const [size, setSize] = useState(38);
 
     let navigate = useNavigate();
-
+    //API
     useEffect(() => {
         setLoading(true);
         const fetchProduct = async () => {
-            await axios.get('http://localhost:8080/API/products').then((res) => setListProducts(res.data.data)).catch((error) => console.log(error))
+            await axios.get(GetProduct)
+                .then((res) => setListProducts(res.data.data))
+                .catch((error) => console.log(error))
         }
         setLoading(false)
         fetchProduct();
     }, [loading])
-
+    //API
     useEffect(() => {
         setLoading(true);
         const fetchImage = async () => {
-            await axios.get('http://localhost:8080/API/images').then((res) => setListImages(res.data.data)).catch((error) => console.log(error))
+            await axios.get(GetImage)
+                .then((res) => setListImages(res.data.data))
+                .catch((error) => console.log(error))
         }
         setLoading(false)
         fetchImage();
     }, [loading])
-
+    //API
     useEffect(() => {
         const fetchUser = async () => {
-            await axios.post("http://localhost:8080/check-user", {},
+            await axios.post(Check_Login_Users, {},
                 {
                     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                 }).then((res) => {
@@ -63,14 +66,9 @@ export default function Detail() {
         }
         fetchUser();
     }, [])
-
     const { id } = useParams();
-
     const Product = ListProducts.find((e) => e.id == id)
-
     const [img, setImg] = useState(0)
-
-    //size
 
     const ListSize = [
         { id: 1, size: 38 },
@@ -81,10 +79,10 @@ export default function Detail() {
         { id: 6, size: 43 },
         { id: 7, size: 44 },
     ]
-
+    //API
     const HandleAddToCart = async () => {
         setLoading(true)
-        await axios.post('http://localhost:8080/API/create-a-cart', { Phone: Phone, ProductID: id, Size: size, Quantity: 1, Status: 1 }).then((res) => {
+        await axios.post(PPD_Cart, { Phone: Phone, ProductID: id, Size: size, Quantity: 1, Status: 1 }).then((res) => {
             if (res.data.message) {
                 toast.error(res.data.message)
             }
@@ -95,7 +93,6 @@ export default function Detail() {
         setLoading(false)
         navigate("/Shop", { replace: true });
     }
-
     if (isLogin === true) {
         if (Product) {
             const Images = ListImages.filter((e) => e.ProductId === Product.id)

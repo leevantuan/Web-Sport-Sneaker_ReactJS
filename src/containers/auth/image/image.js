@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
-import axios from '../../../routers/axiosCustom'
-import './image.scss'
-import ReactPaginate from 'react-paginate'
+import axios from 'axios';
+import './image.scss';
+import ReactPaginate from 'react-paginate';
 
 import AuthNavbar from '../../../components/Auth-navbar/Auth-navbar';
+import isLoginAuth from '../isLoginAuth';
 
 import { AiOutlineClose } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { toast } from 'react-toastify';
-
-import isLoginAuth from '../isLoginAuth';
 import { Link } from 'react-router-dom';
+
+import { PPD_Image, GetImage } from "../../../routers/API";
 
 export default function Image() {
 
@@ -27,14 +27,13 @@ export default function Image() {
 
     const [ImageLinkText, setImageLinkText] = useState("")
     const [ProductIdText, setProductIdText] = useState("")
-
     const [FindId, setFindId] = useState("")
     const [SearchText, setSearchText] = useState("")
-
+    //API
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
-            const res = await axios.get('/images');
+            const res = await axios.get(GetImage);
             setImage(res.data.data);
             setLoading(false);
         }
@@ -53,25 +52,19 @@ export default function Image() {
     //Pagination
     const [NumberPage, setNumberPage] = useState(1);
     const [currentLastPage] = useState(12);
-
     let totalPage = Math.ceil(Images.length / currentLastPage)
-
-    //Get current
     const indexOfLastPost = NumberPage * currentLastPage;
     const indexOfFistPost = indexOfLastPost - currentLastPage;
     const CurrentImage = Images.slice(indexOfFistPost, indexOfLastPost);
-
-
     const handlePageClick = (event) => {
         setNumberPage(event.selected + 1);
     }
 
-
+    //API
     const HandleCreate = async () => {
         setLoading(true)
-        await axios.post('/create-a-image', { ImageLink: ImageLinkText, ProductId: ProductIdText });
+        await axios.post(PPD_Image, { ImageLink: ImageLinkText, ProductId: ProductIdText });
         setLoading(false)
-
         setShowCreate(false);
         setImageLinkText("");
         setProductIdText("");
@@ -82,7 +75,6 @@ export default function Image() {
     if (FindId !== "") {
         FindImage = image.find((e) => e.id === FindId)
     }
-
     const HandleClickEdit = (event) => {
         setFindId(event.id);
         setShowUpdate(true);
@@ -92,26 +84,24 @@ export default function Image() {
             setProductIdText(event.ProductId);
         }
     }
-
     const HandleClickDelete = (event) => {
         setFindId(event.id);
         setShowDelete(true);
     }
-
+    //API
     const HandleUpdate = async (FindCategory) => {
         setLoading(true)
-        await axios.put('/create-a-image', { ImageLink: ImageLinkText, ProductId: ProductIdText, id: FindId });
+        await axios.put(PPD_Image, { ImageLink: ImageLinkText, ProductId: ProductIdText, id: FindId });
         setLoading(false)
-
         setShowUpdate(false);
         setImageLinkText("");
         setProductIdText("");
         toast.success(`Update with ID ${FindCategory.id} success!`);
     }
-
+    //API
     const HandleDelete = async () => {
         setLoading(true)
-        await axios.delete('/create-a-image', { data: { id: FindId } });
+        await axios.delete(PPD_Image, { data: { id: FindId } });
         setLoading(false)
 
         setFindId("");
@@ -189,8 +179,6 @@ export default function Image() {
                         />
 
                     </div>
-
-
 
                     {/* Create a image */}
                     <div className='modal-create-category' hidden={showCreate ? false : true}>

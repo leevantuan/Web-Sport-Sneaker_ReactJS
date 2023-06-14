@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './user.scss'
-import ReactPaginate from 'react-paginate'
+import './user.scss';
+import ReactPaginate from 'react-paginate';
 
 import AuthNavbar from '../../../components/Auth-navbar/Auth-navbar';
+import isLoginAuth from '../isLoginAuth';
 
 import { AiOutlineClose } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { toast } from 'react-toastify';
-
-import isLoginAuth from '../isLoginAuth';
 import { Link } from 'react-router-dom';
 
+
+import { GetUsers, PPD_Users } from "../../../routers/API";
 export default function User() {
 
     const check = isLoginAuth();
@@ -33,15 +34,13 @@ export default function User() {
     const [PasswordText, setPasswordText] = useState("")
     const [RoleIDText, setRoleIDText] = useState("")
     const [message, setMessage] = useState("")
-
     const [FindId, setFindId] = useState("")
-
     const [searchText, setSearchText] = useState("");
-
+    //API
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
-            const res = await axios.get('http://localhost:8080/users');
+            const res = await axios.get(GetUsers);
             setUser(res.data.data);
             setLoading(false);
         }
@@ -57,10 +56,7 @@ export default function User() {
     //Pagination
     const [NumberPage, setNumberPage] = useState(1);
     const [currentLastPage] = useState(5);
-
     let totalPage = Math.ceil(SearchUsers.length / currentLastPage)
-
-    //Get current
     const indexOfLastPost = NumberPage * currentLastPage;
     const indexOfFistPost = indexOfLastPost - currentLastPage;
     const CurrentUser = SearchUsers.slice(indexOfFistPost, indexOfLastPost);
@@ -68,12 +64,11 @@ export default function User() {
     const handlePageClick = (event) => {
         setNumberPage(event.selected + 1);
     }
-
+    //API
     const HandleCreate = async () => {
         setLoading(true)
-        let { data } = await axios.post('http://localhost:8080/create-users', { Name: NameText, Phone: PhoneText, PassWord: PasswordText, RoleID: RoleIDText });
+        let { data } = await axios.post(PPD_Users, { Name: NameText, Phone: PhoneText, PassWord: PasswordText, RoleID: RoleIDText });
         setLoading(false)
-
         if (data.message === "success") {
             setShowCreate(false);
             setNameText("");
@@ -85,33 +80,28 @@ export default function User() {
         else {
             setMessage(data.message);
         }
-
     }
-
     let FindUser = []
     if (FindId !== "") {
         FindUser = user.find((e) => e.id === FindId)
     }
-
     const HandleClickEdit = (event) => {
         setFindId(event.id);
         setShowUpdate(true);
-
         if (FindUser !== []) {
             setNameText(event.Name);
             setPhoneText(event.Phone);
             setRoleIDText(event.RoleID);
         }
     }
-
     const HandleClickDelete = (event) => {
         setFindId(event.id);
         setShowDelete(true);
     }
-
+    //API
     const HandleUpdate = async (FindCategory) => {
         setLoading(true)
-        await axios.put('http://localhost:8080/create-users', { Name: NameText, Phone: PhoneText, PassWord: PasswordText, RoleID: RoleIDText, id: FindId });
+        await axios.put(PPD_Users, { Name: NameText, Phone: PhoneText, PassWord: PasswordText, RoleID: RoleIDText, id: FindId });
         setLoading(false)
 
         setNameText("");
@@ -120,12 +110,11 @@ export default function User() {
         setPasswordText("");
         setShowUpdate(false)
         toast.success(`Update with ID ${FindUser.id} success!`);
-
     }
-
+    //API
     const HandleDelete = async () => {
         setLoading(true)
-        await axios.delete('http://localhost:8080/create-users', { data: { id: FindId } });
+        await axios.delete(PPD_Users, { data: { id: FindId } });
         setLoading(false)
 
         setFindId("");

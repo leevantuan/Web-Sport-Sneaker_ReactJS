@@ -1,34 +1,33 @@
 import React, { useEffect, useState } from 'react';
-// import axios from 'axios';
-import axios from '../../../routers/axiosCustom'
-import './cart.scss'
-import ReactPaginate from 'react-paginate'
+import axios from 'axios';
+import './cart.scss';
+import ReactPaginate from 'react-paginate';
 
 import AuthNavbar from '../../../components/Auth-navbar/Auth-navbar';
+import isLoginAuth from '../isLoginAuth';
 
 import { AiOutlineClose } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { toast } from 'react-toastify';
-
-import isLoginAuth from '../isLoginAuth';
 import { Link } from 'react-router-dom';
+//API
+import { GetCart, PPD_Cart } from "../../../routers/API"
 
 export default function Cart() {
 
     const check = isLoginAuth();
 
     const [loading, setLoading] = useState(false);
-    const [cart, setCart] = useState([]);
-
     const [showDelete, setShowDelete] = useState(false)
+    const [cart, setCart] = useState([]);
 
     const [FindId, setFindId] = useState("")
     const [SearchText, setSearchText] = useState("")
-
+    //API
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
-            const res = await axios.get('/carts');
+            const res = await axios.get(GetCart);
             setCart(res.data.data);
             setLoading(false);
         }
@@ -46,10 +45,7 @@ export default function Cart() {
     //Pagination
     const [NumberPage, setNumberPage] = useState(1);
     const [currentLastPage] = useState(12);
-
     let totalPage = Math.ceil(SearchCart.length / currentLastPage)
-
-    //Get current
     const indexOfLastPost = NumberPage * currentLastPage;
     const indexOfFistPost = indexOfLastPost - currentLastPage;
     const CurrentCart = SearchCart.slice(indexOfFistPost, indexOfLastPost);
@@ -62,19 +58,15 @@ export default function Cart() {
     if (FindId !== "") {
         FindCart = cart.find((e) => e.id === FindId)
     }
-
-
     const HandleClickDelete = (event) => {
         setFindId(event.id);
         setShowDelete(true);
     }
-
     const HandleDelete = async () => {
         setLoading(true)
-        await axios.delete('/create-a-cart', { data: { id: FindId } });
+        await axios.delete(PPD_Cart, { data: { id: FindId } });
         setFindId("");
         setLoading(false)
-
         setShowDelete(false);
         toast.success(`Delete a category success!`);
     }

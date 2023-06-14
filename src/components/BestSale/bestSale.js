@@ -2,14 +2,14 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import "./bestSale.scss"
+import "./bestSale.scss";
 
 import { FaRegStar } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
-import axios from "../../routers/axiosCustom"
-
 import { Link } from 'react-router-dom';
+import axios from "axios";
 
+import { GetProduct } from "../../routers/API";
 class BestSale extends React.Component {
 
     constructor(props) {
@@ -23,7 +23,8 @@ class BestSale extends React.Component {
 
     fetchData = async () => {
         this.setState({ isLoading: true });
-        await axios.get('/products').then((res) => this.setState({ products: res.data.data, isLoading: false }))
+        await axios.get(GetProduct)
+            .then((res) => this.setState({ products: res.data.data, isLoading: false }))
     }
 
     render() {

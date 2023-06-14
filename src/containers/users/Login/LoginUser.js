@@ -4,23 +4,19 @@ import axios from 'axios';
 
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
-
 import { Link } from 'react-router-dom'
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 
+import { Login_Users } from "../../../routers/API";
 export default function LoginUser() {
-
     let navigate = useNavigate();
-
     const [PhoneText, setPhoneText] = useState("");
     const [PassWord, setPassWord] = useState("");
-
     const [ShowPassword, setShowPassword] = useState(false);
-
+    //API
     const HandleClickLogin = async () => {
-
-        const { data } = await axios.post('http://localhost:8080/login-users', { Phone: PhoneText, PassWord: PassWord });
+        const { data } = await axios.post(Login_Users, { Phone: PhoneText, PassWord: PassWord });
         if (data.message === "success") {
             toast.success(data.message)
             localStorage.setItem("token", data.token);
@@ -30,7 +26,6 @@ export default function LoginUser() {
             toast.error(data.message)
         }
     }
-
     const HandleClickRegister = () => {
         navigate("/Register", { replace: true });
     }

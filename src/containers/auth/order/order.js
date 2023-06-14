@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import axios from '../../../routers/axiosCustom'
-import ReactPaginate from 'react-paginate'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import ReactPaginate from 'react-paginate';
 import './order.scss'
 
 import { AiOutlineClose } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { toast } from 'react-toastify';
-
-import AuthNavbar from '../../../components/Auth-navbar/Auth-navbar';
-
-import isLoginAuth from '../isLoginAuth';
 import { Link } from 'react-router-dom';
 
-export default function Order() {
+import AuthNavbar from '../../../components/Auth-navbar/Auth-navbar';
+import isLoginAuth from '../isLoginAuth';
 
+import { GetOrder, GetCart, GetProduct, PPD_Order } from "../../../routers/API";
+export default function Order() {
     const check = isLoginAuth();
 
     const ListStatus = [
@@ -35,11 +34,11 @@ export default function Order() {
     const [FindId, setFindId] = useState("")
     const [Status, setStatus] = useState("")
     const [SearchText, setSearchText] = useState("")
-
+    //API
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
-            const res = await axios.get('/orders');
+            const res = await axios.get(GetOrder);
             setOrder(res.data.data);
             setLoading(false);
         }
@@ -49,7 +48,7 @@ export default function Order() {
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
-            const res = await axios.get('/carts');
+            const res = await axios.get(GetCart);
             setCart(res.data.data);
             setLoading(false);
         }
@@ -59,23 +58,17 @@ export default function Order() {
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
-            const res = await axios.get('/products');
+            const res = await axios.get(GetProduct);
             setProduct(res.data.data);
             setLoading(false);
         }
         fetchPosts();
     }, [loading])
 
-    // let SearchOrder = Order.map((e) => e.Phone == SearchText);
-    //sort
-    // let Products = [...SearchProduct].sort((a, b) => b.id - a.id);
     //Pagination
     const [NumberPage, setNumberPage] = useState(1);
     const [currentLastPage] = useState(10);
-
     let totalPage = Math.ceil(Order.length / currentLastPage)
-
-    //Get current
     const indexOfLastPost = NumberPage * currentLastPage;
     const indexOfFistPost = indexOfLastPost - currentLastPage;
     const CurrentProduct = Order.slice(indexOfFistPost, indexOfLastPost);
@@ -86,55 +79,45 @@ export default function Order() {
         FindOrder = Order.find((e) => e.id === FindId);
         FindListCArt = FindOrder.ListCart;
     }
-
     //list cart
     let ListCarts = FindListCArt.map((event) => Cart.find((e) => e.id === event))
 
     let ListProductID = ListCarts.map((event) => event.ProductID)
-
     //list product
     let ListProducts = ListProductID.map((event) => Product.find((e) => e.id === event))
-
-    // console.log(ListProducts)
 
     const HandleClickDetail = (event) => {
         setShowRead(true);
         setFindId(event.id);
     }
-
     const HandleClickEdit = (event) => {
         setShowUpdate(true);
         setFindId(event);
         setShowRead(false);
-
         if (FindOrder !== []) {
             setStatus(FindOrder.Status)
         }
     }
-
     const HandleClickDelete = (event) => {
         setShowDelete(true);
         setFindId(event);
         setShowRead(false);
     }
-
-
+    //API
     const HandleUpdate = async () => {
         setLoading(true);
-        await axios.put("/create-a-order",
+        await axios.put(PPD_Order,
             { Status: Status, id: FindId })
         setLoading(true);
-
         setStatus("");
         setShowUpdate(false)
         toast.success("Update status success!")
     }
-
+    //API
     const HandleDelete = async () => {
         setLoading(true)
-        await axios.delete('/create-a-order', { data: { id: FindId } });
+        await axios.delete(PPD_Order, { data: { id: FindId } });
         setLoading(false)
-
         setFindId("");
         setShowDelete(false);
         toast.success(`Delete a category success!`);
@@ -163,6 +146,7 @@ export default function Order() {
                                     <th>PHONE NAME</th>
                                     <th>ADDRESS</th>
                                     <th>TOTAL</th>
+                                    <th>CART ID</th>
                                     <th>STATUS</th>
                                     <th>ACTIONS</th>
                                 </tr>
@@ -176,6 +160,7 @@ export default function Order() {
                                             <td>{e.Phone}</td>
                                             <td>{e.Address}</td>
                                             <td>$ {e.Total}</td>
+                                            <td>{e.ListCart}</td>
                                             <td>{e.Status}</td>
                                             <td>
                                                 <button onClick={() => HandleClickDetail(e)}>Detail</button>
@@ -208,7 +193,6 @@ export default function Order() {
                             containerClassName="pagination"
                             activeClassName="active-paginate"
                         />
-
                     </div>
 
                     {/* Update a product */}

@@ -1,22 +1,20 @@
 import React, { useEffect } from 'react'
-import "./AuthNavbar.scss"
+import "./AuthNavbar.scss";
+import axios from 'axios';
 
 import { Link } from 'react-router-dom';
-
-import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-
 import isLoginAuth from '../../containers/auth/isLoginAuth';
 
+import { Check_Login_Admin } from "../../routers/API";
+
 export default function AuthNavbar() {
-
-    let navigate = useNavigate();
-
     let check = isLoginAuth();
-
+    let navigate = useNavigate();
+    //API
     useEffect(() => {
         const fetchUser = async () => {
-            await axios.post("http://localhost:8080/check-admin", {},
+            await axios.post(Check_Login_Admin, {},
                 {
                     headers: { Authorization: `Bearer ${localStorage.getItem("tokenAdmin")}` },
                 }).then((res) => {
@@ -27,7 +25,6 @@ export default function AuthNavbar() {
         }
         fetchUser();
     }, [])
-
     const HandleClickLogout = () => {
         localStorage.removeItem("tokenAdmin");
         navigate("/Auth", { replace: true });

@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import "./Shop.scss";
-import "../../../components/body.scss"
+import "../../../components/body.scss";
 
 import Product from '../../../components/product';
-// import Pagination from '../../../components/Pagination/Pagination';
-
 import Header from '../../../components/Header/header';
 import Footer from '../../../components/Footer/footer';
-
-// import { useSelector } from 'react-redux';
-import axios from '../../../routers/axiosCustom';
+import axios from 'axios';
 import ReactPaginate from 'react-paginate'
 
+import { GetProduct, GetCategory } from "../../../routers/API";
 export default function Shop() {
 
     const [loading, setLoading] = useState(false)
@@ -20,20 +17,24 @@ export default function Shop() {
     const [ProductCategory, setProductCategory] = useState();
     const [PriceFrom, setPriceFrom] = useState(0);
     const [PriceTo, setPriceTo] = useState(99999);
-
+    //API
     useEffect(() => {
         setLoading(true);
         const fetchProduct = async () => {
-            await axios.get('/products').then((res) => setListProducts(res.data.data)).catch((error) => console.log(error))
+            await axios.get(GetProduct)
+                .then((res) => setListProducts(res.data.data))
+                .catch((error) => console.log(error))
         }
         setLoading(false)
         fetchProduct();
     }, [loading])
-
+    //API
     useEffect(() => {
         setLoading(true);
         const fetchCategory = async () => {
-            await axios.get('/categories').then((res) => setListCategories(res.data.data)).catch((error) => console.log(error))
+            await axios.get(GetCategory)
+                .then((res) => setListCategories(res.data.data))
+                .catch((error) => console.log(error))
         }
         setLoading(false)
         fetchCategory();
@@ -82,13 +83,10 @@ export default function Shop() {
     ]
 
     const [sort, setSort] = useState(options[0].value);
-
     let ProductSort = ProductItems;
-
     const HandleChangeSort = (data) => {
         setSort(data.target.value);
     }
-
     if (sort === "Price Low - Hight") {
         ProductSort = [...ProductItems].sort((a, b) => a.Price - b.Price);
     }
@@ -97,24 +95,17 @@ export default function Shop() {
     } else {
         ProductSort = ProductItems;
     }
-
     //remove filter
     const RemoveFilter = () => {
         window.location.reload();
     }
-
     //Pagination
     const [NumberPage, setNumberPage] = useState(1);
     const [currentLastPage] = useState(12);
-
     let totalPage = Math.ceil(ProductSort.length / currentLastPage)
-
-    //Get current
     const indexOfLastPost = NumberPage * currentLastPage;
     const indexOfFistPost = indexOfLastPost - currentLastPage;
     const CurrentProducts = ProductSort.slice(indexOfFistPost, indexOfLastPost);
-
-
     const handlePageClick = (event) => {
         setNumberPage(event.selected + 1);
     }

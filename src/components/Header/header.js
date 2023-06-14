@@ -1,69 +1,65 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../../components/body.scss'
-import './header.scss'
+import './header.scss';
+import Item from '../../components/ItemSearch/Item';
 
 import { Link } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 import { AiOutlineUser } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaBars } from "react-icons/fa";
 
-import Item from '../../components/ItemSearch/Item';
-// import { useSelector } from 'react-redux';
+import { GetProduct, GetCart, Check_Login_Users, PPD_Cart } from "../../routers/API";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
-import axios from 'axios';
-import { useNavigate } from "react-router-dom";
-
-export default function Header(props) {
-
+export default function Header() {
     let navigate = useNavigate();
-
     const [Name, setName] = useState("")
     const [Phone, setPhone] = useState("")
+    const [textSearch, setTextSearch] = useState("")
 
+    const [loading, setLoading] = useState(false)
     const [bar, setBar] = useState(false)
     const [myAccount, setMyAccount] = useState(false)
     const [showSearch, setShowSearch] = useState(false)
     const [showCart, setShowCart] = useState(false)
     const [inputSearch, setInputSearch] = useState(false)
-    const [textSearch, setTextSearch] = useState("")
     const [list, setList] = useState(false)
-
-    const [loading, setLoading] = useState(false)
     const [ListProducts, setListProducts] = useState([]);
     const [ListCarts, setListCarts] = useState([]);
 
-    //list product
+    //API
     useEffect(() => {
         setLoading(true);
         const fetchProduct = async () => {
-            await axios.get('http://localhost:8080/API/products').then((res) => setListProducts(res.data.data)).catch((error) => console.log(error))
+            await axios.get(GetProduct)
+                .then((res) => setListProducts(res.data.data))
+                .catch((error) => console.log(error))
         }
         setLoading(false)
         fetchProduct();
     }, [loading])
 
     const ProductsSearch = ListProducts.filter((e) => e.Name.includes(textSearch))
-
-    //list cart
+    //API
     useEffect(() => {
         setLoading(true);
         const fetchCart = async () => {
-            await axios.get('http://localhost:8080/API/carts').then((res) => setListCarts(res.data.data)).catch((error) => console.log(error))
+            await axios.get(GetCart)
+                .then((res) => setListCarts(res.data.data))
+                .catch((error) => console.log(error))
         }
         setLoading(false)
         fetchCart();
     }, [loading])
-
-    //user check
+    //API
     useEffect(() => {
         const fetchUser = async () => {
-            await axios.post("http://localhost:8080/check-user", {},
+            await axios.post(Check_Login_Users, {},
                 {
                     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                 }).then((res) => {
@@ -75,23 +71,18 @@ export default function Header(props) {
         }
         fetchUser();
     }, [])
-
     //filter cart with user phone number
     const [ProductsCart, setProductsCart] = useState([]);
     const [TotalCart, setTotalCart] = useState(0);
     const [CountCart, setCountCart] = useState(0);
-
     useEffect(() => {
         const List = ListCarts.filter((cart) => cart.Phone === Phone && cart.Status === 1)
-
         const ListProductID = List.map((id) => id.ProductID)
-
         setProductsCart(ListProductID.map((event) => ListProducts.find((item) => item.id === event)));
     }, [ListCarts, ListProducts, Phone])
 
     useEffect(() => {
         setLoading(true);
-        //Total cart
         const ListPriceCart = ProductsCart.map((event) => event.Price)
         if (ListPriceCart) {
             let TotalCart = 0;
@@ -105,7 +96,6 @@ export default function Header(props) {
         }
         setLoading(false);
     }, [loading, ProductsCart])
-
     const HandleClickLogout = () => {
         localStorage.removeItem("token");
         navigate("/", { replace: true });
@@ -119,12 +109,11 @@ export default function Header(props) {
         navigate("/Account", { replace: true });
         setMyAccount(false);
     }
-
     const HandleClickDetail = () => {
         setShowSearch(false)
         setInputSearch(false)
     }
-
+    //API
     const HandleDeleteACart = async (event) => {
 
         let List = ListCarts.filter((cart) => cart.Phone === Phone)
@@ -132,7 +121,7 @@ export default function Header(props) {
         let ProductRemove = List.find((e) => e.ProductID === event)
 
         setLoading(true)
-        await axios.delete('http://localhost:8080/API/create-a-cart', { data: { id: ProductRemove.id } });
+        await axios.delete(PPD_Cart, { data: { id: ProductRemove.id } });
         setLoading(false)
 
         toast.success(`Delete success!`);

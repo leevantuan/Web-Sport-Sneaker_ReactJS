@@ -4,27 +4,20 @@ import axios from 'axios';
 
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
-
 import { useNavigate } from "react-router-dom";
-
 import { toast } from 'react-toastify';
 
+import { PPD_Users } from "../../../routers/API";
 export default function Register() {
-
   let navigate = useNavigate();
-
   const [PhoneText, setPhoneText] = useState("");
   const [PassWord, setPassWord] = useState("");
   const [NameText, setNameText] = useState("");
-
   const [ShowPassword, setShowPassword] = useState(false);
-
   const RoleID = "user";
-
+  //API
   const HandleClickRegister = async () => {
-
-    const { data } = await axios.post('http://localhost:8080/create-users', { Name: NameText, Phone: PhoneText, PassWord: PassWord, RoleID: RoleID });
-
+    const { data } = await axios.post(PPD_Users, { Name: NameText, Phone: PhoneText, PassWord: PassWord, RoleID: RoleID });
     if (data) {
       toast.error(data.message)
     }
@@ -34,9 +27,7 @@ export default function Register() {
       setNameText("");
       navigate("/", { replace: true });
     }
-
   }
-
   const HandleClickLogin = () => {
     navigate("/", { replace: true });
   }

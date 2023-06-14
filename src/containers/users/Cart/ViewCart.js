@@ -1,50 +1,49 @@
 import React, { useEffect, useState } from 'react'
-import './ViewCart.scss'
+import './ViewCart.scss';
+import axios from 'axios';
 
 import Header from '../../../components/Header/header';
 import Footer from '../../../components/Footer/footer';
 
-import axios from 'axios';
+import { GetProduct, GetCart, Check_Login_Users, PPD_Cart, Put_Status_Cart, PPD_Order } from "../../../routers/API";
 
 export default function ViewCart() {
     const [Name, setName] = useState("")
     const [Phone, setPhone] = useState("")
     const [Address, setAddress] = useState("")
 
-    //list
     const [loading, setLoading] = useState(false)
     const [CheckOut, setCheckOut] = useState(false)
     const [ListProducts, setListProducts] = useState([]);
     const [ListCarts, setListCarts] = useState([]);
-
-    //cart
     const [ProductsCart, setProductsCart] = useState([]);
     const [TotalCart, setTotalCart] = useState(0);
-
-    //list product
+    //API
     useEffect(() => {
         setLoading(true);
         const fetchProduct = async () => {
-            await axios.get('http://localhost:8080/API/products').then((res) => setListProducts(res.data.data)).catch((error) => console.log(error))
+            await axios.get(GetProduct)
+                .then((res) => setListProducts(res.data.data))
+                .catch((error) => console.log(error))
         }
         setLoading(false)
         fetchProduct();
     }, [loading])
-
-    //list cart
+    //API
     useEffect(() => {
         setLoading(true);
         const fetchCart = async () => {
-            await axios.get('http://localhost:8080/API/carts').then((res) => setListCarts(res.data.data)).catch((error) => console.log(error))
+            await axios.get(GetCart)
+                .then((res) => setListCarts(res.data.data))
+                .catch((error) => console.log(error))
         }
         setLoading(false)
         fetchCart();
     }, [loading])
-
-    //user check
+    //API
     useEffect(() => {
         const fetchUser = async () => {
-            await axios.post("http://localhost:8080/check-user", {},
+            await axios.post(Check_Login_Users, {},
                 {
                     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                 }).then((res) => {
@@ -56,7 +55,6 @@ export default function ViewCart() {
         }
         fetchUser();
     }, [])
-
     //filter cart with user phone number
     useEffect(() => {
         const List = ListCarts.filter((cart) => cart.Phone === Phone && cart.Status === 1)
@@ -68,9 +66,8 @@ export default function ViewCart() {
     }, [ListCarts, ListProducts, Phone])
 
     let List = ListCarts.filter((cart) => cart.Phone === Phone)
-
+    //Total cart
     useEffect(() => {
-        //Total cart
         const ListPriceCart = ProductsCart.map((event) => event.Price)
         const ListQuantityCart = List.map((event) => event.Quantity)
 
@@ -82,50 +79,42 @@ export default function ViewCart() {
         }
         setTotalCart(TotalCart)
     }, [ProductsCart, List])
-
+    //API
     const HandleDeleteACart = async (event) => {
-
         let ProductRemove = List.find((e) => e.ProductID === event)
-
         setLoading(true)
-        await axios.delete('http://localhost:8080/API/create-a-cart', { data: { id: ProductRemove.id } });
+        await axios.delete(PPD_Cart, { data: { id: ProductRemove.id } });
         setLoading(false)
 
         window.location.reload(false);
     }
-
+    //API
     const HandleIncrease = async (event) => {
         let Quantity = event.Quantity + 1;
-
         setLoading(true)
-        await axios.put('http://localhost:8080/API/create-a-cart', { Quantity: Quantity, id: event.id });
+        await axios.put(PPD_Cart, { Quantity: Quantity, id: event.id });
         setLoading(false)
-
     }
+    //API
     const HandleReduce = async (event) => {
         let Quantity = event.Quantity - 1;
-
         setLoading(true)
-        await axios.put('http://localhost:8080/API/create-a-cart', { Quantity: Quantity, id: event.id });
+        await axios.put(PPD_Cart, { Quantity: Quantity, id: event.id });
         setLoading(false)
-
         window.location.reload(false);
     }
-
     let Totals = ((TotalCart * 5 / 100) + TotalCart).toFixed();
 
     let ListCartStatus = ListCarts.filter((e) => e.Status === 1)
 
     let ListCart = ListCartStatus.map((e) => e.id)
-
+    //API
     const HandleOrder = async () => {
-        // let ListCart = ListCarts.map((e) => e.id)
         setLoading(true)
-        await axios.post('http://localhost:8080/API/create-a-order', { Status: "Confirming", Address: Address, Phone: Phone, Total: Totals, ListCart: ListCart });
-        await axios.put('http://localhost:8080/API/update-status', { Phone: Phone });
+        await axios.post(PPD_Order, { Status: "Confirming", Address: Address, Phone: Phone, Total: Totals, ListCart: ListCart });
+        await axios.put(Put_Status_Cart, { Phone: Phone });
         window.location.reload(false);
         setLoading(false)
-
         alert("Ok")
     }
 

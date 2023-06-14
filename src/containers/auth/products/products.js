@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import axios from '../../../routers/axiosCustom'
-import ReactPaginate from 'react-paginate'
-import './products.scss'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import ReactPaginate from 'react-paginate';
+import './products.scss';
 
 import { AiOutlineClose } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 import AuthNavbar from '../../../components/Auth-navbar/Auth-navbar';
-
 import isLoginAuth from '../isLoginAuth';
-import { Link } from 'react-router-dom';
+
+import { GetProduct, PPD_Product, GetCategory, GetImage } from "../../../routers/API";
 
 export default function Product() {
 
@@ -46,7 +47,7 @@ export default function Product() {
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
-            const res = await axios.get('/products');
+            const res = await axios.get(GetProduct);
             setProduct(res.data.data);
             setLoading(false);
         }
@@ -66,19 +67,19 @@ export default function Product() {
     const indexOfLastPost = NumberPage * currentLastPage;
     const indexOfFistPost = indexOfLastPost - currentLastPage;
     const CurrentProduct = Products.slice(indexOfFistPost, indexOfLastPost);
-
+    //API
     useEffect(() => {
         const fetchCategory = async () => {
-            const res = await axios.get('/categories');
+            const res = await axios.get(GetCategory);
             setCategory(res.data.data);
             setCategoryText(res.data.data[0].id)
         }
         fetchCategory();
     }, [loading])
-
+    //API
     useEffect(() => {
         const fetchImage = async () => {
-            const res = await axios.get('/images');
+            const res = await axios.get(GetImage);
             setListImage(res.data.data);
         }
         fetchImage();
@@ -123,10 +124,10 @@ export default function Product() {
         setFindId(event.id);
         setShowRead(false);
     }
-
+    //API
     const HandleCreate = async () => {
         setLoading(true);
-        await axios.post("/create-a-product",
+        await axios.post(PPD_Product,
             { Name: NameText, Price: PriceText, Detail: DetailText, Image: ImageText, Sale: SaleText, New: NewText, CategoryId: CategoryText, Quantity: Quantity })
         setLoading(true);
 
@@ -138,11 +139,10 @@ export default function Product() {
         setShowCreate(false);
         toast.success("Create a product success!")
     }
-
+    //API
     const HandleUpdate = async () => {
-        // console.log(NameText, PriceText, DetailText, ImageText, SaleText, NewText, CategoryText, Quantity, FindId)
         setLoading(true);
-        await axios.put("/create-a-product",
+        await axios.put(PPD_Product,
             { Name: NameText, Price: PriceText, Detail: DetailText, Image: ImageText, Sale: SaleText, New: NewText, CategoryId: CategoryText, Quantity: Quantity, id: FindId })
         setLoading(true);
 
@@ -151,10 +151,10 @@ export default function Product() {
         setSaleText(0);
         toast.success("Update a product success!")
     }
-
+    //API
     const HandleDelete = async () => {
         setLoading(true)
-        await axios.delete('/create-a-product', { data: { id: FindId } });
+        await axios.delete(PPD_Product, { data: { id: FindId } });
         setLoading(false)
 
         setFindId("");
@@ -164,7 +164,6 @@ export default function Product() {
     const handlePageClick = (event) => {
         setNumberPage(event.selected + 1);
     }
-
     if (check) {
         return (
             <div className='container'>
@@ -198,8 +197,6 @@ export default function Product() {
                                             <td>{e.Detail}</td>
                                             <td>
                                                 <button onClick={() => HandleClickDetail(e)}>Detail</button>
-                                                {/* <button onClick={() => HandleClickEdit(e)}>Edit</button>
-                                            <button onClick={() => HandleClickDelete(e)}>Delete</button> */}
                                             </td>
                                         </tr>
                                     ))

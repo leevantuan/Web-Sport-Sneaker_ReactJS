@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../../../components/body.scss'
-import './Home.scss'
-// import { useSelector } from 'react-redux';
+import './Home.scss';
 
 import { FaRegHandPointRight } from "react-icons/fa";
 import { FaShippingFast } from "react-icons/fa";
@@ -18,8 +17,10 @@ import BestSale from '../../../components/BestSale/bestSale';
 
 import Header from '../../../components/Header/header';
 import Footer from '../../../components/Footer/footer';
-import axios from '../../../routers/axiosCustom';
+import axios from 'axios';
 
+
+import { GetProduct } from "../../../routers/API";
 export default function Home() {
 
     const [loading, setLoading] = useState(false)
@@ -28,13 +29,12 @@ export default function Home() {
     useEffect(() => {
         setLoading(true);
         const fetchProduct = async () => {
-            await axios.get('/products').then((res) => setListProducts(res.data.data)).catch((error) => console.log(error))
+            await axios.get(GetProduct).then((res) => setListProducts(res.data.data)).catch((error) => console.log(error))
         }
         setLoading(false)
         fetchProduct();
     }, [loading])
 
-    // const Products = useSelector((state) => state.products)
     const ProductsSale = ListProducts.filter((e) => e.Sale === 1)
 
     return (

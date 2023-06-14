@@ -23,7 +23,6 @@ import Cart from './containers/auth/cart/cart';
 import Order from './containers/auth/order/order';
 
 import LoginUser from './containers/users/Login/LoginUser';
-// import LogoutUser from './containers/users/Login/Logout';
 import Register from './containers/users/Login/Register';
 
 import store from './redux/store';
@@ -35,11 +34,9 @@ function App() {
     return (
         <BrowserRouter>
             <Provider store={store}>
-                {/* <Index /> */}
                 <Routes>
 
                     <Route path="/" element={<LoginUser />} />
-                    {/* <Route path="/logout" element={<LogoutUser />} /> */}
                     <Route path="/Register" element={<Register />} />
                     <Route path="/Home" element={<Home />} />
                     <Route path="/Shop" element={<Shop />} />
@@ -49,7 +46,6 @@ function App() {
                     <Route path="/ViewCart" element={<ViewCart />} />
                     <Route path="/Account" element={<Account />} />
 
-                    {/* <Route path="/index" element={<Index />} /> */}
                     <Route path="/Auth" element={<LoginAuth />} />
                     <Route path="/Auth/Category" element={<Category />} />
                     <Route path="/Auth/Product" element={<Product />} />

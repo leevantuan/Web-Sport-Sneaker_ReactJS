@@ -1,31 +1,30 @@
-import React, { useEffect, useState } from 'react'
-import './account.scss'
+import React, { useEffect, useState } from 'react';
+import './account.scss';
 
 import { AiOutlineClose } from "react-icons/ai";
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 import Header from '../../../components/Header/header';
 import Footer from '../../../components/Footer/footer';
 
-import axios from 'axios';
-
+import { GetProduct, GetCart, Check_Login_Users, GetOrder, PPD_Order } from "../../../routers/API";
 export default function Account() {
 
     const [loading, setLoading] = useState(false);
     const [Order, setOrder] = useState([]);
     const [Cart, setCart] = useState([]);
     const [Product, setProduct] = useState([]);
-
     const [showRead, setShowRead] = useState(false);
 
     const [FindId, setFindId] = useState("")
     const [Name, setName] = useState("")
     const [Phone, setPhone] = useState("")
 
-    //user check
+    //API
     useEffect(() => {
         const fetchUser = async () => {
-            await axios.post("http://localhost:8080/check-user", {},
+            await axios.post(Check_Login_Users, {},
                 {
                     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                 }).then((res) => {
@@ -37,31 +36,31 @@ export default function Account() {
         }
         fetchUser();
     }, [])
-
+    //API
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
-            const res = await axios.get('http://localhost:8080/API/orders');
+            const res = await axios.get(GetOrder);
             setOrder(res.data.data);
             setLoading(false);
         }
         fetchPosts();
     }, [loading])
-
+    //APi
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
-            const res = await axios.get('http://localhost:8080/API/carts');
+            const res = await axios.get(GetCart);
             setCart(res.data.data);
             setLoading(false);
         }
         fetchPosts();
     }, [loading])
-
+    //API
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
-            const res = await axios.get('http://localhost:8080/API/products');
+            const res = await axios.get(GetProduct);
             setProduct(res.data.data);
             setLoading(false);
         }
@@ -74,25 +73,20 @@ export default function Account() {
         FindOrder = Order.find((e) => e.id === FindId);
         FindListCArt = FindOrder.ListCart;
     }
-
     //list cart
     let ListCarts = FindListCArt.map((event) => Cart.find((e) => e.id === event))
-
     let ListProductID = ListCarts.map((event) => event.ProductID)
-
     //list product
     let ListProducts = ListProductID.map((event) => Product.find((e) => e.id === event))
-
-    // console.log(ListProducts)
 
     const HandleClickDetail = (event) => {
         setShowRead(true);
         setFindId(event.id);
     }
-
+    //API
     const HandleClickDelete = async (event) => {
         setLoading(true)
-        await axios.delete('http://localhost:8080/API/create-a-order', { data: { id: FindId } });
+        await axios.delete(PPD_Order, { data: { id: FindId } });
         setLoading(false)
 
         setFindId("");
