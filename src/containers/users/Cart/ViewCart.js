@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './ViewCart.scss';
 import axios from 'axios';
 
 import Header from '../../../components/Header/header';
 import Footer from '../../../components/Footer/footer';
 
-import { GetProduct, GetCart, Check_Login_Users, PPD_Cart, Put_Status_Cart, PPD_Order } from "../../../routers/API";
+import { GetProduct, GetCart, Check_Login_Users, PPD_Cart, Put_Status_Cart, PPD_Order, Delete_Cart_User } from "../../../routers/API";
+import { toast } from 'react-toastify';
+import { useNavigate } from "react-router-dom";
 
 export default function ViewCart() {
+    let navigate = useNavigate();
     const [Name, setName] = useState("")
     const [Phone, setPhone] = useState("")
     const [Address, setAddress] = useState("")
@@ -20,15 +23,13 @@ export default function ViewCart() {
     const [TotalCart, setTotalCart] = useState(0);
     //API
     useEffect(() => {
-        setLoading(true);
         const fetchProduct = async () => {
             await axios.get(GetProduct)
                 .then((res) => setListProducts(res.data.data))
                 .catch((error) => console.log(error))
         }
-        setLoading(false)
         fetchProduct();
-    }, [loading])
+    }, [])
     //API
     useEffect(() => {
         setLoading(true);
@@ -37,8 +38,8 @@ export default function ViewCart() {
                 .then((res) => setListCarts(res.data.data))
                 .catch((error) => console.log(error))
         }
-        setLoading(false)
         fetchCart();
+        setLoading(false);
     }, [loading])
     //API
     useEffect(() => {
@@ -65,7 +66,7 @@ export default function ViewCart() {
 
     }, [ListCarts, ListProducts, Phone])
 
-    let List = ListCarts.filter((cart) => cart.Phone === Phone)
+    const List = ListCarts.filter((cart) => cart.Phone === Phone && cart.Status === 1)
     //Total cart
     useEffect(() => {
         const ListPriceCart = ProductsCart.map((event) => event.Price)
@@ -77,15 +78,14 @@ export default function ViewCart() {
             let Quantity = ListQuantityCart[i];
             TotalCart = TotalCart + (Price * Quantity);
         }
-        setTotalCart(TotalCart)
-    }, [ProductsCart, List])
+        setTotalCart(TotalCart);
+    }, [ProductsCart, List, loading])
     //API
     const HandleDeleteACart = async (event) => {
         let ProductRemove = List.find((e) => e.ProductID === event)
         setLoading(true)
-        await axios.delete(PPD_Cart, { data: { id: ProductRemove.id } });
+        await axios.delete(Delete_Cart_User, { data: { id: ProductRemove.id, Status: 1 } });
         setLoading(false)
-
         window.location.reload(false);
     }
     //API
@@ -98,24 +98,35 @@ export default function ViewCart() {
     //API
     const HandleReduce = async (event) => {
         let Quantity = event.Quantity - 1;
+        if (Quantity === 0) {
+            setLoading(true)
+            await axios.put(PPD_Cart, { Quantity: Quantity, id: event.id });
+            setLoading(false)
+            window.location.reload(false);
+        }
         setLoading(true)
         await axios.put(PPD_Cart, { Quantity: Quantity, id: event.id });
         setLoading(false)
-        window.location.reload(false);
     }
     let Totals = ((TotalCart * 5 / 100) + TotalCart).toFixed();
-
     let ListCartStatus = ListCarts.filter((e) => e.Status === 1)
-
     let ListCart = ListCartStatus.map((e) => e.id)
+    //
+    const ref = useRef(null)
     //API
     const HandleOrder = async () => {
-        setLoading(true)
-        await axios.post(PPD_Order, { Status: "Confirming", Address: Address, Phone: Phone, Total: Totals, ListCart: ListCart });
-        await axios.put(Put_Status_Cart, { Phone: Phone });
-        window.location.reload(false);
-        setLoading(false)
-        alert("Ok")
+        if (Address) {
+            setLoading(true)
+            await axios.post(PPD_Order, { Status: "Confirming", Address: Address, Phone: Phone, Total: Totals, ListCart: ListCart });
+            await axios.put(Put_Status_Cart, { Phone: Phone });
+            setLoading(false)
+            alert("Success")
+            navigate("/Home", { replace: true });
+        }
+        else {
+            toast.error("Enter address. Please!")
+            ref.current.focus();
+        }
     }
 
     return (
@@ -138,27 +149,31 @@ export default function ViewCart() {
                         <tbody>
                             {
                                 ProductsCart.map((e) => {
-                                    let FindCart = [];
                                     if (e.id) {
-                                        FindCart = List.find((event) => event.ProductID === e.id)
+                                        const FindCart = List.find((event) => event.ProductID === e.id)
+                                        if (FindCart) {
+                                            return (
+                                                <tr key={e.id}>
+                                                    <td>
+                                                        <img src={e.Image} alt='' />
+                                                    </td>
+                                                    <td>{e.Name}</td>
+                                                    <td>$ {e.Price}</td>
+                                                    <td>
+                                                        {FindCart.Size}
+                                                    </td>
+                                                    <td>
+                                                        <button onClick={() => HandleReduce(FindCart)}>-</button>
+                                                        {FindCart.Quantity}
+                                                        <button onClick={() => HandleIncrease(FindCart)}>+</button>
+                                                    </td>
+                                                    <td><button onClick={() => HandleDeleteACart(e.id)}>X</button></td>
+                                                </tr>
+                                            )
+                                        }
                                     }
                                     return (
-                                        <tr key={e.id}>
-                                            <td>
-                                                <img src={e.Image} alt='' />
-                                            </td>
-                                            <td>{e.Name}</td>
-                                            <td>$ {e.Price}</td>
-                                            <td>
-                                                {FindCart.Size}
-                                            </td>
-                                            <td>
-                                                <button onClick={() => HandleReduce(FindCart)}>-</button>
-                                                {FindCart.Quantity}
-                                                <button onClick={() => HandleIncrease(FindCart)}>+</button>
-                                            </td>
-                                            <td><button onClick={() => HandleDeleteACart(e.id)}>X</button></td>
-                                        </tr>
+                                        <div key={e.id}></div>
                                     )
                                 })
                             }
@@ -173,7 +188,7 @@ export default function ViewCart() {
                         <p>Ship ( 5% of total products ): ${TotalCart * 5 / 100}</p>
                         <p>Total money to pay: ${Totals}</p>
                         <label>Address: </label>
-                        <input placeholder='Address ...' onChange={(e) => setAddress(e.target.value)} />
+                        <input placeholder='Address ...' onChange={(e) => setAddress(e.target.value)} ref={ref} />
                         <button onClick={() => HandleOrder()}>ORDER</button>
                     </div>
                 </div>

@@ -19,6 +19,7 @@ const PPD_Image = "http://localhost:8080/API/image";
 const GetCart = "http://localhost:8080/API/carts";
 const PPD_Cart = "http://localhost:8080/API/cart";
 const Put_Status_Cart = "http://localhost:8080/API/update-status";
+const Delete_Cart_User = "http://localhost:8080/API//cart-user";
 
 const GetOrder = "http://localhost:8080/API/orders";
 const PPD_Order = "http://localhost:8080/API/order";
@@ -38,6 +39,7 @@ module.exports = {
     PPD_Image,
     GetCart,
     PPD_Cart,
+    Delete_Cart_User,
     Put_Status_Cart,
     GetOrder,
     PPD_Order

@@ -73,7 +73,6 @@ export default function Header() {
     }, [])
     //filter cart with user phone number
     const [ProductsCart, setProductsCart] = useState([]);
-    const [TotalCart, setTotalCart] = useState(0);
     const [CountCart, setCountCart] = useState(0);
     useEffect(() => {
         const List = ListCarts.filter((cart) => cart.Phone === Phone && cart.Status === 1)
@@ -83,17 +82,7 @@ export default function Header() {
 
     useEffect(() => {
         setLoading(true);
-        const ListPriceCart = ProductsCart.map((event) => event.Price)
-        if (ListPriceCart) {
-            let TotalCart = 0;
-            for (var i = 0; i < ListPriceCart.length; i++) {
-                let Price = ListPriceCart[i];
-                TotalCart = TotalCart + Price;
-            }
-            setCountCart(ProductsCart.length)
-            setTotalCart(TotalCart)
-            setLoading(false);
-        }
+        setCountCart(ProductsCart.length)
         setLoading(false);
     }, [loading, ProductsCart])
     const HandleClickLogout = () => {
@@ -207,7 +196,6 @@ export default function Header() {
 
                                         <div className='view-cart-link'>
                                             <Link to="/ViewCart">View cart</Link>
-                                            <p>Total: $ {TotalCart}</p>
                                         </div>
                                     </ul> :
                                     ""

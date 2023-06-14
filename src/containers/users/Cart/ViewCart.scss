@@ -51,6 +51,10 @@ th {
         padding: 8px 16px;
         box-sizing: border-box;
         margin-top: 5px;
+        &:focus-visible {
+            border: none;
+            outline: 2px solid red;
+        }
     }
     > button {
         margin-top: 20px;

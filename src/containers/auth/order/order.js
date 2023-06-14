@@ -122,6 +122,12 @@ export default function Order() {
         setShowDelete(false);
         toast.success(`Delete a category success!`);
     }
+    const HandleDeleteOrder = async (id) => {
+        setLoading(true)
+        await axios.delete(PPD_Order, { data: { id: id } });
+        setLoading(false)
+        toast.success(`Delete a category success!`);
+    }
     const handlePageClick = (event) => {
         setNumberPage(event.selected + 1);
     }
@@ -164,6 +170,7 @@ export default function Order() {
                                             <td>{e.Status}</td>
                                             <td>
                                                 <button onClick={() => HandleClickDetail(e)}>Detail</button>
+                                                <button onClick={() => HandleDeleteOrder(e.id)}>Delete</button>
                                             </td>
                                         </tr>
                                     ))
